@@ -179,8 +179,10 @@ export async function POST(req: Request) {
 
     doc.end()
     const pdf = await pdfPromise
+const uint8Array = new Uint8Array(pdf)
 
-    return new NextResponse(pdf, {
+return new NextResponse(uint8Array, {
+
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': 'attachment; filename="ebook.pdf"',
