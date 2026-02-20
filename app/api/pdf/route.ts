@@ -155,7 +155,7 @@ export async function POST(req: Request) {
       if (clean.toLowerCase().startsWith('przykład')) {
         doc.moveDown()
         const h = doc.heightOfString(clean, { width: 420 }) + 20
-        doc.rect(doc.x, doc.y, 440, h).dash(5).stroke().undash()
+        doc.rect(doc.x, doc.y, 440, h).dash(5, {}).stroke().undash()
         doc.text(clean, doc.x + 10, doc.y + 10, { width: 420 })
         doc.moveDown(3)
         doc.x = doc.page.margins.left
