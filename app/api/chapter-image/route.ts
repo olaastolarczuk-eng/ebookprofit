@@ -21,9 +21,17 @@ Style: modern, clean, soft colors, abstract, professional, no text.
       size: '1536x1024',
     })
 
-    return NextResponse.json({
-      image: image.data[0].b64_json,
-    })
+    if (!image.data || image.data.length === 0) {
+  return NextResponse.json(
+    { error: 'Nie udało się wygenerować obrazu' },
+    { status: 500 }
+  )
+}
+
+return NextResponse.json({
+  image: image.data[0].b64_json,
+})
+
   } catch (err) {
     console.error(err)
     return NextResponse.json(
