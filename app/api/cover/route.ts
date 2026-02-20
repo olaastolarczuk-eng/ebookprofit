@@ -57,9 +57,17 @@ Visually engaging and professional.
       size: '1024x1536',
     })
 
-    const base64 = image.data[0].b64_json
+    if (!image.data || image.data.length === 0) {
+  return NextResponse.json(
+    { error: 'Nie udało się wygenerować okładki' },
+    { status: 500 }
+  )
+}
 
-    return NextResponse.json({ image: base64 })
+const base64 = image.data[0].b64_json
+
+return NextResponse.json({ image: base64 })
+
   } catch (err) {
     console.error('Cover error:', err)
     return NextResponse.json(
