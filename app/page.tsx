@@ -75,6 +75,20 @@ export default function Home() {
         </div>
 
       </section>
+      {/* ===== LICZNIK ===== */}
+<section className="py-24 text-center bg-black">
+  <h2 className="text-5xl font-bold text-purple-400 mb-4">
+    1 284+
+  </h2>
+  <p className="text-gray-400 text-lg">
+    Wygenerowanych ebooków przez naszych użytkowników
+  </p>
+
+  <div className="mt-6 text-yellow-400 text-xl">
+    ★★★★★ <span className="text-white ml-2">5.0 średnia ocena</span>
+  </div>
+</section>
+
       {/* ===== DLACZEGO MY ===== */}
 <section className="py-28 px-6 bg-black text-center">
   <h2 className="text-4xl font-bold mb-16">
@@ -114,6 +128,58 @@ export default function Home() {
 
   </div>
 </section>
+{/* ===== DEMO ===== */}
+<section className="py-28 px-6 bg-gradient-to-b from-gray-900 to-black text-center">
+  <h2 className="text-4xl font-bold mb-12">
+    Zobacz jak wygląda gotowy ebook
+  </h2>
+
+  <div className="max-w-4xl mx-auto bg-white/5 p-10 rounded-3xl border border-white/10 shadow-2xl">
+    <div className="aspect-video bg-black rounded-xl flex items-center justify-center text-gray-500">
+      Tutaj możesz w przyszłości dodać wideo demo 🎥
+    </div>
+
+    <p className="text-gray-400 mt-6">
+      Pełna struktura rozdziałów, estetyczny układ, profesjonalna okładka.
+    </p>
+  </div>
+</section>
+{/* ===== PORÓWNANIE ===== */}
+<section className="py-28 px-6 bg-black text-center">
+  <h2 className="text-4xl font-bold mb-16">
+    Dlaczego to lepsze niż pisanie ręczne?
+  </h2>
+
+  <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-10 text-left">
+
+    <div className="bg-red-500/10 p-8 rounded-2xl border border-red-500/20">
+      <h3 className="text-xl font-semibold mb-4 text-red-400">
+        Pisanie samodzielne
+      </h3>
+      <ul className="text-gray-400 space-y-2">
+        <li>❌ Tygodnie pracy</li>
+        <li>❌ Brak struktury</li>
+        <li>❌ Projektowanie okładki osobno</li>
+        <li>❌ Koszt grafika</li>
+      </ul>
+    </div>
+
+    <div className="bg-green-500/10 p-8 rounded-2xl border border-green-500/20">
+      <h3 className="text-xl font-semibold mb-4 text-green-400">
+        EbookProfit
+      </h3>
+      <ul className="text-gray-400 space-y-2">
+        <li>✔ Ebook w kilka minut</li>
+        <li>✔ Automatyczna struktura</li>
+        <li>✔ Okładka generowana AI</li>
+        <li>✔ Gotowy PDF do sprzedaży</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+
 
       {/* ===== CENNIK ===== */}
       <section className="py-28 px-6 bg-gradient-to-b from-black to-gray-900 text-center">
@@ -174,6 +240,22 @@ export default function Home() {
 
         </div>
       </section>
+      {/* ===== BEZPIECZEŃSTWO ===== */}
+<section className="py-20 px-6 bg-gray-950 text-center">
+  <h2 className="text-3xl font-bold mb-8">
+    Bezpieczne płatności
+  </h2>
+
+  <p className="text-gray-400 max-w-2xl mx-auto">
+    Wszystkie płatności obsługiwane są przez Stripe.
+    Dane kart są szyfrowane i nigdy nie trafiają na nasze serwery.
+  </p>
+
+  <div className="mt-8 text-gray-500">
+    🔒 SSL • Stripe • Bezpieczne transakcje
+  </div>
+</section>
+
       {/* ===== OPINIE ===== */}
 <section className="py-28 px-6 bg-gray-950 text-center">
   <h2 className="text-4xl font-bold mb-16">

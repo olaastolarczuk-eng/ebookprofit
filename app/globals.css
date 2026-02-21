@@ -25,3 +25,7 @@ body {
 .animate-fadeIn {
   animation: fadeIn 1s ease forwards;
 }
+.hover-glow:hover {
+  box-shadow: 0 0 40px rgba(168, 85, 247, 0.4);
+  transition: 0.3s ease;
+}
