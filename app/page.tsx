@@ -45,11 +45,6 @@ export default function Home() {
   Bez pisania. Bez grafika. Bez tygodni pracy.
 </p>
 
-<p className="text-lg text-gray-400 max-w-xl mb-8">
-  Generuj treść, strukturę i okładkę automatycznie.
-  Bez pisania. Bez grafika. Bez tygodni pracy.
-</p>
-
         <button
           onClick={handleStart}
           className="bg-purple-600 hover:bg-purple-500 transition px-8 py-4 rounded-xl text-lg font-semibold shadow-lg"
