@@ -75,6 +75,45 @@ export default function Home() {
         </div>
 
       </section>
+      {/* ===== DLACZEGO MY ===== */}
+<section className="py-28 px-6 bg-black text-center">
+  <h2 className="text-4xl font-bold mb-16">
+    Dlaczego EbookProfit?
+  </h2>
+
+  <div className="grid md:grid-cols-3 gap-12 max-w-6xl mx-auto">
+
+    <div className="bg-white/5 p-8 rounded-2xl border border-white/10 hover:border-purple-500 transition">
+      <h3 className="text-xl font-semibold mb-4 text-purple-400">
+        🧠 Inteligentna struktura treści
+      </h3>
+      <p className="text-gray-400">
+        AI tworzy logiczne rozdziały, nagłówki i uporządkowaną treść —
+        nie jest to przypadkowy tekst.
+      </p>
+    </div>
+
+    <div className="bg-white/5 p-8 rounded-2xl border border-white/10 hover:border-purple-500 transition">
+      <h3 className="text-xl font-semibold mb-4 text-purple-400">
+        💰 Gotowe do sprzedaży
+      </h3>
+      <p className="text-gray-400">
+        Otrzymujesz plik PDF z okładką, który możesz od razu sprzedawać
+        na swojej stronie lub w social media.
+      </p>
+    </div>
+
+    <div className="bg-white/5 p-8 rounded-2xl border border-white/10 hover:border-purple-500 transition">
+      <h3 className="text-xl font-semibold mb-4 text-purple-400">
+        🚀 Skalowalność
+      </h3>
+      <p className="text-gray-400">
+        Twórz wiele ebooków miesięcznie i buduj własną bibliotekę produktów cyfrowych.
+      </p>
+    </div>
+
+  </div>
+</section>
 
       {/* ===== CENNIK ===== */}
       <section className="py-28 px-6 bg-gradient-to-b from-black to-gray-900 text-center">
@@ -135,6 +174,47 @@ export default function Home() {
 
         </div>
       </section>
+      {/* ===== OPINIE ===== */}
+<section className="py-28 px-6 bg-gray-950 text-center">
+  <h2 className="text-4xl font-bold mb-16">
+    Co mówią użytkownicy?
+  </h2>
+
+  <div className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+
+    <div className="bg-white/5 p-8 rounded-2xl border border-white/10 backdrop-blur">
+      <p className="text-gray-300 mb-6">
+        „Wygenerowałam ebooka i sprzedałam go w ciągu 48 godzin.
+        To narzędzie zmieniło mój biznes.”
+      </p>
+      <p className="text-purple-400 font-semibold">
+        Anna, trenerka online
+      </p>
+    </div>
+
+    <div className="bg-white/5 p-8 rounded-2xl border border-white/10 backdrop-blur">
+      <p className="text-gray-300 mb-6">
+        „Oszczędziłem tygodnie pracy. AI zrobiło to szybciej i lepiej
+        niż się spodziewałem.”
+      </p>
+      <p className="text-purple-400 font-semibold">
+        Michał, konsultant biznesowy
+      </p>
+    </div>
+
+    <div className="bg-white/5 p-8 rounded-2xl border border-white/10 backdrop-blur">
+      <p className="text-gray-300 mb-6">
+        „Najlepsze narzędzie do tworzenia produktów cyfrowych,
+        jakie testowałam.”
+      </p>
+      <p className="text-purple-400 font-semibold">
+        Karolina, twórczyni kursów
+      </p>
+    </div>
+
+  </div>
+</section>
+
 
       {/* ===== CTA ===== */}
       <section className="py-28 text-center px-6">
