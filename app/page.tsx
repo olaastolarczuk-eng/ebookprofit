@@ -431,9 +431,7 @@ export default function Home() {
         </button>
       </section>
 
-    </main>
-  )
-}
+    
 <footer className="py-10 text-center text-gray-500 text-sm bg-black">
   <div className="space-x-6">
     <a href="/polityka-prywatnosci" className="hover:underline">
@@ -444,4 +442,8 @@ export default function Home() {
     </a>
   </div>
 </footer>
+</main>
+  )
+}
+
 
