@@ -16,3 +16,6 @@ export default function RootLayout({
     </html>
   )
 }
+import CookieBanner from '@/components/CookieBanner'
+
+<CookieBanner />

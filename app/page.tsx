@@ -33,12 +33,11 @@ export default function Home() {
         <div className="absolute w-[600px] h-[600px] bg-purple-600/20 blur-3xl rounded-full top-[-200px]"></div>
 
         <h1 className="text-5xl md:text-6xl font-bold max-w-4xl mb-6 leading-tight">
-  Stwórz gotowy ebook do sprzedaży
+  Zamień swoją wiedzę w gotowy ebook
   <span className="block text-purple-400">
     w mniej niż 10 minut 🚀
   </span>
 </h1>
-
 
         <p className="text-lg text-gray-400 max-w-xl mb-8">
   Generuj treść, strukturę i okładkę automatycznie.
@@ -49,9 +48,24 @@ export default function Home() {
           onClick={handleStart}
           className="bg-purple-600 hover:bg-purple-500 transition px-8 py-4 rounded-xl text-lg font-semibold shadow-lg"
         >
-          Zacznij generować
+          Zacznij tworzyć swój ebook
         </button>
       </section>
+      <section className="py-20 px-6 text-center bg-black">
+  <h2 className="text-3xl font-bold mb-8">
+    Pisanie ebooka to tygodnie pracy…
+  </h2>
+
+  <p className="text-gray-400 max-w-2xl mx-auto mb-8">
+    Brak czasu. Brak struktury. Brak okładki.
+    A i tak nie masz pewności, czy się sprzeda.
+  </p>
+
+  <h3 className="text-2xl font-semibold text-purple-400">
+    Z EbookProfit robisz to w kilka minut.
+  </h3>
+</section>
+
 
       {/* ===== FEATURES ===== */}
       <section className="py-24 px-6 max-w-6xl mx-auto grid md:grid-cols-3 gap-12 text-center">
@@ -420,3 +434,14 @@ export default function Home() {
     </main>
   )
 }
+<footer className="py-10 text-center text-gray-500 text-sm bg-black">
+  <div className="space-x-6">
+    <a href="/polityka-prywatnosci" className="hover:underline">
+      Polityka prywatności
+    </a>
+    <a href="/regulamin" className="hover:underline">
+      Regulamin
+    </a>
+  </div>
+</footer>
+
