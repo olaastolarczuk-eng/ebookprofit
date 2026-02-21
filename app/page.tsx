@@ -32,15 +32,23 @@ export default function Home() {
 
         <div className="absolute w-[600px] h-[600px] bg-purple-600/20 blur-3xl rounded-full top-[-200px]"></div>
 
-        <h1 className="text-5xl md:text-6xl font-bold max-w-4xl mb-6 leading-tight animate-fadeIn">
-          Twórz profesjonalne eBooki w kilka minut
-          <span className="block text-purple-400">z pomocą AI 🚀</span>
-        </h1>
+        <h1 className="text-5xl md:text-6xl font-bold max-w-4xl mb-6 leading-tight">
+  Stwórz gotowy ebook do sprzedaży
+  <span className="block text-purple-400">
+    w mniej niż 10 minut 🚀
+  </span>
+</h1>
+
 
         <p className="text-lg text-gray-400 max-w-xl mb-8">
-          Generuj gotowe ebooki z okładką i eksportem do PDF.
-          Sprzedawaj, buduj markę i skaluj wiedzę szybciej niż kiedykolwiek.
-        </p>
+  Generuj treść, strukturę i okładkę automatycznie.
+  Bez pisania. Bez grafika. Bez tygodni pracy.
+</p>
+
+<p className="text-lg text-gray-400 max-w-xl mb-8">
+  Generuj treść, strukturę i okładkę automatycznie.
+  Bez pisania. Bez grafika. Bez tygodni pracy.
+</p>
 
         <button
           onClick={handleStart}
@@ -196,6 +204,42 @@ export default function Home() {
   </div>
 </section>
 
+<section className="py-24 px-6 bg-black text-center">
+  <h2 className="text-4xl font-bold mb-16">
+    Dla kogo jest EbookProfit?
+  </h2>
+
+  <div className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto text-left">
+
+    <div className="bg-white/5 p-8 rounded-2xl border border-white/10">
+      <h3 className="text-xl font-semibold mb-4 text-purple-400">
+        👩‍🏫 Trenerzy i eksperci
+      </h3>
+      <p className="text-gray-400">
+        Zamień wiedzę w produkt cyfrowy i sprzedawaj ją online.
+      </p>
+    </div>
+
+    <div className="bg-white/5 p-8 rounded-2xl border border-white/10">
+      <h3 className="text-xl font-semibold mb-4 text-purple-400">
+        📱 Twórcy internetowi
+      </h3>
+      <p className="text-gray-400">
+        Stwórz własny ebook jako dodatek do kursu lub lead magnet.
+      </p>
+    </div>
+
+    <div className="bg-white/5 p-8 rounded-2xl border border-white/10">
+      <h3 className="text-xl font-semibold mb-4 text-purple-400">
+        💼 Przedsiębiorcy
+      </h3>
+      <p className="text-gray-400">
+        Buduj markę eksperta bez zatrudniania copywritera.
+      </p>
+    </div>
+
+  </div>
+</section>
 
 
       {/* ===== CENNIK ===== */}
@@ -211,6 +255,10 @@ export default function Home() {
           <div className="bg-white/5 p-8 rounded-2xl border border-white/10 hover:border-purple-500 transition">
             <h3 className="text-2xl font-semibold mb-4">Podstawowy</h3>
             <p className="text-4xl font-bold mb-6">29 zł</p>
+            <p className="text-sm opacity-70 mb-4">
+  Jednorazowa płatność
+</p>
+
             <p className="text-gray-400 mb-6">
               5 ebooków miesięcznie<br />
               Eksport DOCX
@@ -227,6 +275,10 @@ export default function Home() {
           <div className="bg-purple-600 p-8 rounded-2xl text-black shadow-2xl scale-105">
             <h3 className="text-2xl font-semibold mb-4">Premium</h3>
             <p className="text-4xl font-bold mb-6">59 zł</p>
+            <p className="text-sm opacity-70 mb-4">
+  Jednorazowa płatność
+</p>
+
             <p className="mb-6">
               15 ebooków miesięcznie<br />
               PDF + Okładka
@@ -243,6 +295,10 @@ export default function Home() {
           <div className="bg-white/5 p-8 rounded-2xl border border-white/10 hover:border-purple-500 transition">
             <h3 className="text-2xl font-semibold mb-4">Pro+</h3>
             <p className="text-4xl font-bold mb-6">99 zł</p>
+            <p className="text-sm opacity-70 mb-4">
+  Jednorazowa płatność
+</p>
+
             <p className="text-gray-400 mb-6">
               Nielimitowane ebooki<br />
               PDF + Okładka
@@ -308,6 +364,43 @@ export default function Home() {
       </p>
       <p className="text-purple-400 font-semibold">
         Karolina, twórczyni kursów
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<section className="py-24 px-6 bg-gray-950 text-center">
+  <h2 className="text-4xl font-bold mb-12">
+    Najczęstsze pytania
+  </h2>
+
+  <div className="max-w-3xl mx-auto text-left space-y-6">
+
+    <div>
+      <h3 className="font-semibold mb-2">
+        Czy to jest abonament?
+      </h3>
+      <p className="text-gray-400">
+        Nie. Każdy plan to jednorazowa płatność.
+      </p>
+    </div>
+
+    <div>
+      <h3 className="font-semibold mb-2">
+        Czy mogę sprzedawać wygenerowane ebooki?
+      </h3>
+      <p className="text-gray-400">
+        Tak. Masz pełne prawa do wygenerowanej treści.
+      </p>
+    </div>
+
+    <div>
+      <h3 className="font-semibold mb-2">
+        Czy potrzebuję wiedzy technicznej?
+      </h3>
+      <p className="text-gray-400">
+        Nie. Wystarczy wpisać temat i kliknąć generuj.
       </p>
     </div>
 
