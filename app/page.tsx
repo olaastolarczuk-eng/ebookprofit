@@ -88,7 +88,7 @@ export default function Home() {
           {/* Podstawowy */}
           <div className="bg-white/5 p-8 rounded-2xl border border-white/10 hover:border-purple-500 transition">
             <h3 className="text-2xl font-semibold mb-4">Podstawowy</h3>
-            <p className="text-4xl font-bold mb-6">49 zł</p>
+            <p className="text-4xl font-bold mb-6">29 zł</p>
             <p className="text-gray-400 mb-6">
               5 ebooków miesięcznie<br />
               Eksport DOCX
@@ -104,7 +104,7 @@ export default function Home() {
           {/* Premium */}
           <div className="bg-purple-600 p-8 rounded-2xl text-black shadow-2xl scale-105">
             <h3 className="text-2xl font-semibold mb-4">Premium</h3>
-            <p className="text-4xl font-bold mb-6">99 zł</p>
+            <p className="text-4xl font-bold mb-6">59 zł</p>
             <p className="mb-6">
               15 ebooków miesięcznie<br />
               PDF + Okładka
@@ -120,7 +120,7 @@ export default function Home() {
           {/* Pro+ */}
           <div className="bg-white/5 p-8 rounded-2xl border border-white/10 hover:border-purple-500 transition">
             <h3 className="text-2xl font-semibold mb-4">Pro+</h3>
-            <p className="text-4xl font-bold mb-6">199 zł</p>
+            <p className="text-4xl font-bold mb-6">99 zł</p>
             <p className="text-gray-400 mb-6">
               Nielimitowane ebooki<br />
               PDF + Okładka
@@ -139,7 +139,7 @@ export default function Home() {
       {/* ===== CTA ===== */}
       <section className="py-28 text-center px-6">
         <h2 className="text-4xl font-bold mb-8">
-          Gotowa zacząć zarabiać na swoich ebookach?
+          Gotowa/wy zacząć zarabiać na swoich ebookach?
         </h2>
 
         <button
