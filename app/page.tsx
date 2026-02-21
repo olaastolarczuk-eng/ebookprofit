@@ -128,22 +128,39 @@ export default function Home() {
 
   </div>
 </section>
-{/* ===== DEMO ===== */}
-<section className="py-28 px-6 bg-gradient-to-b from-gray-900 to-black text-center">
-  <h2 className="text-4xl font-bold mb-12">
-    Zobacz jak wygląda gotowy ebook
+{/* ===== MOCKUP MACBOOK ===== */}
+<section className="py-32 px-6 bg-gradient-to-b from-black via-gray-900 to-black text-center relative overflow-hidden">
+
+  <div className="absolute w-[600px] h-[600px] bg-purple-600/20 blur-3xl rounded-full top-10 left-1/2 -translate-x-1/2 animate-pulse"></div>
+
+  <h2 className="text-4xl font-bold mb-16 relative z-10">
+    Zobacz jak wygląda dashboard
   </h2>
 
-  <div className="max-w-4xl mx-auto bg-white/5 p-10 rounded-3xl border border-white/10 shadow-2xl">
-    <div className="aspect-video bg-black rounded-xl flex items-center justify-center text-gray-500">
-      Tutaj możesz w przyszłości dodać wideo demo 🎥
+  <div className="relative max-w-5xl mx-auto z-10">
+
+    {/* GÓRNA RAMKA */}
+    <div className="bg-gray-800 rounded-t-2xl h-8 flex items-center px-4 space-x-2">
+      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+      <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+      <div className="w-3 h-3 bg-green-500 rounded-full"></div>
     </div>
 
-    <p className="text-gray-400 mt-6">
-      Pełna struktura rozdziałów, estetyczny układ, profesjonalna okładka.
-    </p>
+    {/* EKRAN */}
+    <div className="bg-black rounded-b-2xl shadow-2xl border border-white/10 overflow-hidden hover-glow transition duration-500">
+
+      <img
+        src="/dashboard-preview.png"
+        alt="Dashboard preview"
+        className="w-full object-cover"
+      />
+
+    </div>
+
   </div>
+
 </section>
+
 {/* ===== PORÓWNANIE ===== */}
 <section className="py-28 px-6 bg-black text-center">
   <h2 className="text-4xl font-bold mb-16">
