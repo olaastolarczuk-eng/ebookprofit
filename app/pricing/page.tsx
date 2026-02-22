@@ -1,35 +1,36 @@
 'use client'
 
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
+import { useState } from 'react'
 
 export default function Pricing() {
   const router = useRouter()
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null)
 
   const handleCheckout = async (plan: string) => {
-    try {
-      setLoadingPlan(plan)
+    setLoadingPlan(plan)
 
-      const res = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan }),
-      })
+    const { data } = await supabase.auth.getUser()
 
-      if (!res.ok) {
-        throw new Error('Błąd tworzenia sesji Stripe')
-      }
-
-      const data = await res.json()
-
-      // 🔥 Przekierowanie do Stripe
-      window.location.href = data.url
-
-    } catch (error) {
-      alert('Nie udało się rozpocząć płatności.')
-      setLoadingPlan(null)
+    // 🔐 Jeśli NIE zalogowany → rejestracja
+    if (!data.user) {
+      router.push('/register')
+      return
     }
+
+    // ✅ Jeśli zalogowany → Stripe
+    const res = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        plan,
+        userId: data.user.id,
+      }),
+    })
+
+    const result = await res.json()
+    window.location.href = result.url
   }
 
   return (
@@ -42,13 +43,8 @@ export default function Pricing() {
 
         {/* ===== PLAN PODSTAWOWY ===== */}
         <div className="bg-white p-6 rounded shadow">
-          <h2 className="text-xl font-bold mb-2">
-            Plan Podstawowy
-          </h2>
-
-          <p className="text-3xl font-bold mb-4">
-            29 zł
-          </p>
+          <h2 className="text-xl font-bold mb-2">Plan Podstawowy</h2>
+          <p className="text-3xl font-bold mb-4">29 zł</p>
 
           <p className="mb-6 text-gray-600">
             5 ebooków miesięcznie <br />
@@ -70,13 +66,8 @@ export default function Pricing() {
 
         {/* ===== PLAN PREMIUM ===== */}
         <div className="bg-white p-6 rounded shadow border-2 border-black scale-105">
-          <h2 className="text-xl font-bold mb-2">
-            Plan Premium
-          </h2>
-
-          <p className="text-3xl font-bold mb-4">
-            59 zł
-          </p>
+          <h2 className="text-xl font-bold mb-2">Plan Premium</h2>
+          <p className="text-3xl font-bold mb-4">59 zł</p>
 
           <p className="mb-6 text-gray-600">
             15 ebooków miesięcznie <br />
@@ -98,13 +89,8 @@ export default function Pricing() {
 
         {/* ===== PLAN PRO+ ===== */}
         <div className="bg-white p-6 rounded shadow">
-          <h2 className="text-xl font-bold mb-2">
-            Plan Pro+
-          </h2>
-
-          <p className="text-3xl font-bold mb-4">
-            99 zł
-          </p>
+          <h2 className="text-xl font-bold mb-2">Plan Pro+</h2>
+          <p className="text-3xl font-bold mb-4">99 zł</p>
 
           <p className="mb-6 text-gray-600">
             Nielimitowana liczba ebooków <br />
