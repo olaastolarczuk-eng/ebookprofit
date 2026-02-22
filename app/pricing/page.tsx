@@ -93,7 +93,7 @@ export default function Pricing() {
           <p className="text-3xl font-bold mb-4">99 zł</p>
 
           <p className="mb-6 text-gray-600">
-            Nielimitowana liczba ebooków <br />
+            30 ebooków miesięcznie <br />
             Format: PDF + DOCX <br />
             Automatyczna okładka <br />
             Najwyższa jakość generowania
