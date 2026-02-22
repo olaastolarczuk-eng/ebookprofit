@@ -23,6 +23,36 @@ export default function Home() {
       router.push('/dashboard')
     }
   }
+  
+  {/* ===== NAVBAR ===== */}
+<nav className="flex justify-between items-center py-6 px-6 md:px-12 sticky top-0 bg-black/70 backdrop-blur z-50">
+  
+  {/* Logo */}
+  <div
+    onClick={() => router.push('/')}
+    className="text-xl font-bold text-white cursor-pointer"
+  >
+    EbookProfit
+  </div>
+
+  {/* Przyciski */}
+  <div className="space-x-4">
+    <button
+      onClick={() => router.push('/login')}
+      className="text-gray-300 hover:text-white transition"
+    >
+      Logowanie
+    </button>
+
+    <button
+      onClick={() => router.push('/register')}
+      className="bg-purple-600 hover:bg-purple-500 px-5 py-2 rounded-lg text-white transition"
+    >
+      Rejestracja
+    </button>
+  </div>
+</nav>
+
 
   return (
     <main className="bg-black text-white overflow-hidden">
