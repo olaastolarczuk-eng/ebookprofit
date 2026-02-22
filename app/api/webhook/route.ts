@@ -2,9 +2,7 @@ import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  
-})
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -15,7 +13,7 @@ export async function POST(req: Request) {
   const body = await req.text()
   const sig = req.headers.get('stripe-signature')!
 
-  let event
+  let event: Stripe.Event
 
   try {
     event = stripe.webhooks.constructEvent(
@@ -27,13 +25,14 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Webhook error' }, { status: 400 })
   }
 
+  // 🔥 TYLKO JEDEN BLOK
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session
 
-    const email = session.customer_details?.email
+    const userId = session.metadata?.userId
     const plan = session.metadata?.plan
 
-    if (email && plan) {
+    if (userId && plan) {
       await supabase
         .from('profiles')
         .update({
@@ -42,7 +41,7 @@ export async function POST(req: Request) {
             Date.now() + 30 * 24 * 60 * 60 * 1000
           ).toISOString(),
         })
-        .eq('email', email)
+        .eq('id', userId)
     }
   }
 
