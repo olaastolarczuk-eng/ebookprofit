@@ -19,14 +19,16 @@ export async function POST(req: Request) {
   let event: Stripe.Event
 
   try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET!
-    )
-  } catch (err) {
-    return NextResponse.json({ error: 'Webhook error' }, { status: 400 })
-  }
+  event = stripe.webhooks.constructEvent(
+    body,
+    sig,
+    process.env.STRIPE_WEBHOOK_SECRET!
+  )
+} catch (err) {
+  console.error('❌ Webhook signature error:', err)
+  return NextResponse.json({ error: 'Webhook error' }, { status: 400 })
+}
+
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session
@@ -46,6 +48,7 @@ export async function POST(req: Request) {
         })
         .eq('id', userId)
     }
+console.log('✅ Plan updated for user:', userId)
 
     // 🔥 WYŚLIJ MAILA
     if (email && plan) {

@@ -58,7 +58,23 @@ useEffect(() => {
         .eq('id', profile.id)
 
       profile.ebooks_this_month = 0
+      
     }
+// 🔒 Sprawdzenie wygaśnięcia planu
+if (profile.plan_expires) {
+  const expires = new Date(profile.plan_expires)
+  const now = new Date()
+
+  if (now > expires) {
+    await supabase
+      .from('profiles')
+      .update({ plan: 'Brak' })
+      .eq('id', profile.id)
+
+    profile.plan = 'Brak'
+  }
+}
+
 
     setUserData(profile)
   }
