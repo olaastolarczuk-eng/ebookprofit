@@ -341,7 +341,7 @@ export default function Home() {
 </p>
 
             <p className="text-gray-400 mb-6">
-              Nielimitowane ebooki<br />
+              30 ebooków miesięcznie<br />
               PDF + Okładka
             </p>
             <button

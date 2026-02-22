@@ -127,11 +127,14 @@ useEffect(() => {
 }
   if (userData) {
     const limit =
-      userData.plan === 'Podstawowy'
-        ? 5
-        : userData.plan === 'Premium'
-        ? 15
-        : Infinity
+  userData.plan === 'Podstawowy'
+    ? 5
+    : userData.plan === 'Premium'
+    ? 15
+    : userData.plan === 'Pro+'
+    ? 30
+    : 0
+
         
 
     if (userData.ebooks_this_month >= limit) {
@@ -291,19 +294,20 @@ useEffect(() => {
       <div className="mt-2 text-sm text-gray-600">
   Wykorzystano:
   <span className="ml-1 font-semibold">
-    {userData.plan === 'Pro+'
-      ? '∞'
-      : userData.ebooks_this_month}
+    {userData.ebooks_this_month}
   </span>
-  {userData.plan !== 'Pro+' && (
-    <span>
-      {' / '}
-      {userData.plan === 'Podstawowy' ? 5 : 15}
-    </span>
-  )}
+
+  <span>
+    {' / '}
+    {userData.plan === 'Podstawowy'
+      ? 5
+      : userData.plan === 'Premium'
+      ? 15
+      : userData.plan === 'Pro+'
+      ? 30
+      : 0}
+  </span>
 </div>
-
-
 
       <button
         onClick={() => alert('Tutaj podłączymy Stripe 🚀')}
