@@ -24,7 +24,13 @@ export default function Home() {
     }
   }
   
-  {/* ===== NAVBAR ===== */}
+
+
+
+  return (
+    <main className="bg-black text-white overflow-hidden">
+
+      {/* ===== NAVBAR ===== */}
 <nav className="flex justify-between items-center py-6 px-6 md:px-12 sticky top-0 bg-black/70 backdrop-blur z-50">
   
   {/* Logo */}
@@ -52,10 +58,6 @@ export default function Home() {
     </button>
   </div>
 </nav>
-
-
-  return (
-    <main className="bg-black text-white overflow-hidden">
 
       {/* ===== HERO ===== */}
       <section className="min-h-screen flex flex-col justify-center items-center text-center px-6 relative">
