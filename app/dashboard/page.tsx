@@ -18,6 +18,8 @@ export default function Dashboard() {
   const [ebookId, setEbookId] = useState<string | null>(null)
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [userData, setUserData] = useState<any>(null)
+  const [authLoading, setAuthLoading] = useState(true)
+
   
 
 
@@ -26,6 +28,7 @@ useEffect(() => {
     const { data } = await supabase.auth.getUser()
 
     if (!data.user) {
+      setAuthLoading(false)
       router.push('/login')
       return
     }
@@ -36,14 +39,16 @@ useEffect(() => {
       .eq('id', data.user.id)
       .single()
 
-      if (!profile) return
+    if (!profile) {
+      setAuthLoading(false)
+      return
+    }
 
     // 🔁 RESET MIESIĘCZNY
     const now = new Date()
     const resetDate = profile.month_reset
-  ? new Date(profile.month_reset)
-  : new Date()
-
+      ? new Date(profile.month_reset)
+      : new Date()
 
     if (
       now.getMonth() !== resetDate.getMonth() ||
@@ -58,29 +63,30 @@ useEffect(() => {
         .eq('id', profile.id)
 
       profile.ebooks_this_month = 0
-      
     }
-// 🔒 Sprawdzenie wygaśnięcia planu
-if (profile.plan_expires) {
-  const expires = new Date(profile.plan_expires)
-  const now = new Date()
 
-  if (now > expires) {
-    await supabase
-      .from('profiles')
-      .update({ plan: 'Brak' })
-      .eq('id', profile.id)
+    // 🔒 Sprawdzenie wygaśnięcia planu
+    if (profile.plan_expires) {
+      const expires = new Date(profile.plan_expires)
+      const now = new Date()
 
-    profile.plan = 'Brak'
-  }
-}
+      if (now > expires) {
+        await supabase
+          .from('profiles')
+          .update({ plan: 'Brak' })
+          .eq('id', profile.id)
 
+        profile.plan = 'Brak'
+      }
+    }
 
     setUserData(profile)
+    setAuthLoading(false)
   }
 
   loadUser()
-}, [])
+}, [router])
+
 
   
   // ===== AUTOZAPIS ZMIAN =====
@@ -268,6 +274,15 @@ useEffect(() => {
       })
       .join('')
   }
+
+  if (authLoading) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      Ładowanie...
+    </div>
+  )
+}
+
 
   return (
   <main className="min-h-screen p-8 bg-gray-100">
