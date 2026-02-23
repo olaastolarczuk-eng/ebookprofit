@@ -42,11 +42,11 @@ export default function Pricing() {
       <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
 
         {/* ===== PLAN PODSTAWOWY ===== */}
-        <div className="bg-white p-6 rounded shadow flex flex-col items-center text-center">
+        <div className="bg-white p-8 rounded-2xl shadow flex flex-col items-center text-center">
           <h2 className="text-xl font-bold mb-2 text-black">Plan Podstawowy</h2>
           <p className="text-3xl font-bold mb-4 text-black">29 zł</p>
 
-          <p className="mb-6 text-gray-800">
+            <p className="mb-6 text-gray-800 max-w-xs">
             5 ebooków miesięcznie <br />
             Format: DOCX <br />
             Bez PDF <br />
@@ -65,11 +65,11 @@ export default function Pricing() {
         </div>
 
         {/* ===== PLAN PREMIUM ===== */}
-        <div className="bg-white p-6 rounded shadow flex flex-col items-center text-center">
+        <div className="bg-white p-8 rounded-2xl shadow flex flex-col items-center text-center">
           <h2 className="text-xl font-bold mb-2">Plan Premium</h2>
           <p className="text-3xl font-bold mb-4 text-black">59 zł</p>
 
-          <p className="mb-6 text-gray-700">
+            <p className="mb-6 text-gray-800 max-w-xs">
             15 ebooków miesięcznie <br />
             Format: PDF + DOCX <br />
             Automatyczna okładka <br />
@@ -88,11 +88,11 @@ export default function Pricing() {
         </div>
 
         {/* ===== PLAN PRO+ ===== */}
-        <div className="bg-white p-6 rounded shadow flex flex-col items-center text-center">
+        <div className="bg-white p-8 rounded-2xl shadow flex flex-col items-center text-center">
           <h2 className="text-xl font-bold mb-2">Plan Pro+</h2>
           <p className="text-3xl font-bold mb-4 text-black">99 zł</p>
 
-          <p className="mb-6 text-gray-700">
+            <p className="mb-6 text-gray-800 max-w-xs">
             30 ebooków miesięcznie <br />
             Format: PDF + DOCX <br />
             Automatyczna okładka <br />
