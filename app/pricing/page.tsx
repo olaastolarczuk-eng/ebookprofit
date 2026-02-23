@@ -42,7 +42,7 @@ export default function Pricing() {
       <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
 
         {/* ===== PLAN PODSTAWOWY ===== */}
-        <div className="bg-white/5 backdrop-blur border border-white/10 p-6 rounded-2xl text-white">
+        <div className="bg-white text-black p-6 rounded shadow">
           <h2 className="text-xl font-bold mb-2">Plan Podstawowy</h2>
           <p className="text-3xl font-bold mb-4 text-black">29 zł</p>
 
@@ -65,7 +65,7 @@ export default function Pricing() {
         </div>
 
         {/* ===== PLAN PREMIUM ===== */}
-        <div className="bg-white/5 backdrop-blur border border-white/10 p-6 rounded-2xl text-white">
+        <div className="bg-white text-black p-6 rounded shadow">
           <h2 className="text-xl font-bold mb-2">Plan Premium</h2>
           <p className="text-3xl font-bold mb-4 text-black">59 zł</p>
 
@@ -88,7 +88,7 @@ export default function Pricing() {
         </div>
 
         {/* ===== PLAN PRO+ ===== */}
-        <div className="bg-white/5 backdrop-blur border border-white/10 p-6 rounded-2xl text-white">
+        <div className="bg-white text-black p-6 rounded shadow">
           <h2 className="text-xl font-bold mb-2">Plan Pro+</h2>
           <p className="text-3xl font-bold mb-4 text-black">99 zł</p>
 
