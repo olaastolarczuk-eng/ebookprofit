@@ -9,7 +9,7 @@ export const metadata = {
     title: 'EbookProfit',
     description:
       'Zamień swoją wiedzę w gotowy ebook w mniej niż 10 minut.',
-    url: 'https://twojadomena.pl',
+    url: process.env.NEXT_PUBLIC_SITE_URL,
     siteName: 'EbookProfit',
     type: 'website',
   },
