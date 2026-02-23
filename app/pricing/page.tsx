@@ -39,7 +39,7 @@ export default function Pricing() {
         Wybierz plan
       </h1>
 
-      <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto justify-items-center">
+      <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
 
 
         {/* ===== PLAN PODSTAWOWY ===== */}
