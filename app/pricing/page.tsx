@@ -47,18 +47,20 @@ export default function Pricing() {
           <h2 className="text-xl font-bold mb-2 text-black">Plan Podstawowy</h2>
           <p className="text-3xl font-bold mb-4 text-black">29 zł</p>
 
-            <ul className="mb-6 text-gray-800 space-y-1">
-  <li>5 ebooków miesięcznie</li>
-  <li>Format: DOCX</li>
-  <li>Bez PDF</li>
-  <li>Bez okładki</li>
-</ul>
+            <p className="mb-6 text-gray-800 max-w-xs">
+  5 ebooków miesięcznie <br />
+  Format: DOCX <br />
+  Bez PDF <br />
+  Bez okładki
+</p>
+
 
 
           <button
             onClick={() => handleCheckout('Podstawowy')}
             disabled={loadingPlan === 'Podstawowy'}
-            className="bg-black text-white px-6 py-2 rounded w-full"
+            className="bg-black text-white px-6 py-2 rounded"
+
           >
             {loadingPlan === 'Podstawowy'
               ? 'Przekierowanie...'
@@ -81,7 +83,7 @@ export default function Pricing() {
           <button
             onClick={() => handleCheckout('Premium')}
             disabled={loadingPlan === 'Premium'}
-            className="bg-black text-white px-6 py-2 rounded w-full"
+            className="bg-black text-white px-6 py-2 rounded"
           >
             {loadingPlan === 'Premium'
               ? 'Przekierowanie...'
@@ -104,7 +106,7 @@ export default function Pricing() {
           <button
             onClick={() => handleCheckout('Pro+')}
             disabled={loadingPlan === 'Pro+'}
-            className="bg-black text-white px-6 py-2 rounded w-full"
+            className="bg-black text-white px-6 py-2 rounded"
           >
             {loadingPlan === 'Pro+'
               ? 'Przekierowanie...'
