@@ -34,7 +34,7 @@ export default function Pricing() {
   }
 
   return (
-    <div className="min-h-screen p-10 bg-gray-100 text-gray-900">
+    <div className="min-h-screen p-10 bg-gray-100 text-gray-900 text-center">
       <h1 className="text-3xl font-bold mb-10">
         Wybierz plan
       </h1>
