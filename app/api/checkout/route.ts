@@ -7,9 +7,9 @@ export async function POST(req: Request) {
   const { plan, userId } = await req.json()
 
   const priceMap: Record<string, string> = {
-    Podstawowy: 'price_...',
-    Premium: 'price_...',
-    'Pro+': 'price_...',
+    Podstawowy: 'price_1T2cwXBKaFMW1zBpFXvGBqF9',
+    Premium: 'price_1T2d0RBKaFMW1zBpFPzmYkzq',
+    'Pro+': 'price_1T2d2sBKaFMW1zBpq0nSyX9b',
   }
 
   const session = await stripe.checkout.sessions.create({
