@@ -34,7 +34,7 @@ export default function Pricing() {
   }
 
   return (
-    <div className="min-h-screen p-10 bg-gray-100 text-center">
+    <div className="min-h-screen p-10 bg-gray-100 text-gray-900">
       <h1 className="text-3xl font-bold mb-10">
         Wybierz plan
       </h1>
@@ -43,10 +43,10 @@ export default function Pricing() {
 
         {/* ===== PLAN PODSTAWOWY ===== */}
         <div className="bg-white text-gray-900 p-6 rounded shadow">
-          <h2 className="text-xl font-bold mb-2">Plan Podstawowy</h2>
+          <h2 className="text-xl font-bold mb-2 text-black">Plan Podstawowy</h2>
           <p className="text-3xl font-bold mb-4 text-black">29 zł</p>
 
-          <p className="mb-6 text-gray-700">
+          <p className="mb-6 text-gray-800">
             5 ebooków miesięcznie <br />
             Format: DOCX <br />
             Bez PDF <br />
