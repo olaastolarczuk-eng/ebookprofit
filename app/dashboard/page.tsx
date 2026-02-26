@@ -347,11 +347,11 @@ useEffect(() => {
 </div>
 
       <button
-        onClick={() => alert('https://ebookprofit.vercel.app/pricing')}
-        className="mt-3 text-sm bg-black text-white px-3 py-1 rounded"
-      >
-        Zmień plan
-      </button>
+  onClick={() => router.push('/pricing')}
+  className="mt-3 text-sm bg-black text-white px-3 py-1 rounded"
+>
+  Zmień plan
+</button>
     </div>
 
     <button
