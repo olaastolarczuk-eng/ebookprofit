@@ -1,3 +1,5 @@
+Pricing
+
 'use client'
 
 import { useRouter } from 'next/navigation'
@@ -13,15 +15,17 @@ export default function Pricing() {
 
     const { data } = await supabase.auth.getUser()
 
+    // 🔐 Jeśli NIE zalogowany → rejestracja
     if (!data.user) {
       router.push('/register')
       return
     }
 
+    // ✅ Jeśli zalogowany → Stripe
     const res = await fetch('/api/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+      body: JSON.stringify({ 
         plan,
         userId: data.user.id,
       }),
@@ -32,40 +36,33 @@ export default function Pricing() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 px-6 py-20">
-      
-      {/* HEADER */}
-      <div className="max-w-3xl mx-auto text-center mb-16">
-        <h1 className="text-4xl font-bold tracking-tight mb-4">
-          Wybierz plan dla siebie
-        </h1>
-        <p className="text-lg text-gray-600">
-          Generuj profesjonalne ebooki AI bez limitów technicznych.
-        </p>
-      </div>
+    <div className="min-h-screen p-10 bg-gray-100 text-gray-900 text-center">
+      <h1 className="text-3xl font-bold mb-10">
+        Wybierz plan
+      </h1>
 
-      {/* PRICING GRID */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        
-        {/* ===== PODSTAWOWY ===== */}
-        <div className="bg-white w-full max-w-sm mx-auto p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col">
-          
-          <div className="text-center">
-            <h2 className="text-xl font-semibold mb-2">Podstawowy</h2>
-            <p className="text-4xl font-bold mb-6">29 zł</p>
-          </div>
+     <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto place-items-center">
 
-          <ul className="space-y-3 text-gray-600 mb-8 text-sm">
-            <li>5 ebooków miesięcznie</li>
-            <li>Format DOCX</li>
-            <li>Bez eksportu PDF</li>
-            <li>Bez generowania okładki</li>
-          </ul>
+
+        {/* ===== PLAN PODSTAWOWY ===== */}
+        <div className="bg-white p-8 rounded-2xl shadow flex flex-col items-center text-center">
+          <h2 className="text-xl font-bold mb-2 text-black">Plan Podstawowy</h2>
+          <p className="text-3xl font-bold mb-4 text-black">29 zł</p>
+
+            <p className="mb-6 text-gray-800 max-w-xs">
+  5 ebooków miesięcznie <br />
+  Format: DOCX <br />
+  Bez PDF <br />
+  Bez okładki
+</p>
+
+
 
           <button
             onClick={() => handleCheckout('Podstawowy')}
             disabled={loadingPlan === 'Podstawowy'}
-            className="mt-auto w-full bg-black text-white py-3 rounded-lg font-medium hover:opacity-90 transition"
+            className="bg-black text-white px-6 py-2 rounded"
+
           >
             {loadingPlan === 'Podstawowy'
               ? 'Przekierowanie...'
@@ -73,31 +70,22 @@ export default function Pricing() {
           </button>
         </div>
 
-        {/* ===== PREMIUM (WYRÓŻNIONY) ===== */}
-        <div className="relative bg-white w-full max-w-sm mx-auto p-8 rounded-2xl border-2 border-black shadow-lg flex flex-col">
-          
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-            <span className="bg-black text-white text-xs px-4 py-1 rounded-full">
-              Najczęściej wybierany
-            </span>
-          </div>
+        {/* ===== PLAN PREMIUM ===== */}
+        <div className="bg-white p-8 rounded-2xl shadow flex flex-col items-center text-center">
+          <h2 className="text-xl font-bold mb-2">Plan Premium</h2>
+          <p className="text-3xl font-bold mb-4 text-black">59 zł</p>
 
-          <div className="text-center">
-            <h2 className="text-xl font-semibold mb-2">Premium</h2>
-            <p className="text-4xl font-bold mb-6">59 zł</p>
-          </div>
-
-          <ul className="space-y-3 text-gray-700 mb-8 text-sm">
-            <li>15 ebooków miesięcznie</li>
-            <li>Format PDF + DOCX</li>
-            <li>Automatyczna okładka</li>
-            <li>Wyższa jakość generowania</li>
-          </ul>
+            <p className="mb-6 text-gray-800 max-w-xs">
+            15 ebooków miesięcznie <br />
+            Format: PDF + DOCX <br />
+            Automatyczna okładka <br />
+            Priorytetowa jakość generowania
+          </p>
 
           <button
             onClick={() => handleCheckout('Premium')}
             disabled={loadingPlan === 'Premium'}
-            className="mt-auto w-full bg-black text-white py-3 rounded-lg font-medium hover:opacity-90 transition"
+            className="bg-black text-white px-6 py-2 rounded"
           >
             {loadingPlan === 'Premium'
               ? 'Przekierowanie...'
@@ -105,25 +93,22 @@ export default function Pricing() {
           </button>
         </div>
 
-        {/* ===== PRO+ ===== */}
-        <div className="bg-white w-full max-w-sm mx-auto p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col">
-          
-          <div className="text-center">
-            <h2 className="text-xl font-semibold mb-2">Pro+</h2>
-            <p className="text-4xl font-bold mb-6">99 zł</p>
-          </div>
+        {/* ===== PLAN PRO+ ===== */}
+        <div className="bg-white p-8 rounded-2xl shadow flex flex-col items-center text-center">
+          <h2 className="text-xl font-bold mb-2">Plan Pro+</h2>
+          <p className="text-3xl font-bold mb-4 text-black">99 zł</p>
 
-          <ul className="space-y-3 text-gray-600 mb-8 text-sm">
-            <li>30 ebooków miesięcznie</li>
-            <li>Format PDF + DOCX</li>
-            <li>Automatyczna okładka</li>
-            <li>Najwyższa jakość generowania</li>
-          </ul>
+            <p className="mb-6 text-gray-800 max-w-xs">
+            30 ebooków miesięcznie <br />
+            Format: PDF + DOCX <br />
+            Automatyczna okładka <br />
+            Najwyższa jakość generowania
+          </p>
 
           <button
             onClick={() => handleCheckout('Pro+')}
             disabled={loadingPlan === 'Pro+'}
-            className="mt-auto w-full bg-black text-white py-3 rounded-lg font-medium hover:opacity-90 transition"
+            className="bg-black text-white px-6 py-2 rounded"
           >
             {loadingPlan === 'Pro+'
               ? 'Przekierowanie...'
@@ -133,16 +118,15 @@ export default function Pricing() {
 
       </div>
 
-      {/* BACK LINK */}
-      <div className="text-center mt-16">
+      <div className="mt-10">
         <button
           onClick={() => router.push('/dashboard')}
-          className="text-sm text-gray-500 hover:text-black transition underline"
+          className="text-sm text-gray-500 underline"
         >
           Wróć do panelu
         </button>
       </div>
-
     </div>
   )
 }
+
