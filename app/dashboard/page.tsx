@@ -35,16 +35,36 @@ useEffect(() => {
       return
     }
 
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', data.user.id)
-      .single()
+    const { data: profile, error } = await supabase
+  .from('profiles')
+  .select('*')
+  .eq('id', data.user.id)
+  .maybeSingle()
 
-    if (!profile) {
-      setAuthLoading(false)
-      return
-    }
+if (error) {
+  console.log('Profile error:', error)
+  setAuthLoading(false)
+  return
+}
+
+if (!profile) {
+  console.log('Brak profilu — tworzę nowy')
+
+  const { data: newProfile } = await supabase
+    .from('profiles')
+    .insert({
+      id: data.user.id,
+      email: data.user.email,
+      plan: 'Brak',
+      ebooks_this_month: 0,
+    })
+    .select()
+    .single()
+
+  setUserData(newProfile)
+  setAuthLoading(false)
+  return
+}
 
     // 🔁 RESET MIESIĘCZNY
     const now = new Date()
