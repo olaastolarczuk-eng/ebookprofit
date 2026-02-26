@@ -1,3 +1,5 @@
+Dashboard
+
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -505,5 +507,6 @@ useEffect(() => {
 </main>
 )
 }
+
 
 
