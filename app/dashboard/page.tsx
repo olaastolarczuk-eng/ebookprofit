@@ -347,7 +347,7 @@ useEffect(() => {
 </div>
 
       <button
-        onClick={() => alert('Tutaj podłączymy Stripe 🚀')}
+        onClick={() => alert('https://ebookprofit.vercel.app/pricing')}
         className="mt-3 text-sm bg-black text-white px-3 py-1 rounded"
       >
         Zmień plan
