@@ -1,9 +1,10 @@
 'use client'
+
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { useState } from 'react'
 
-export default function Pricing() {
+export default function PricingClient() {
   const router = useRouter()
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null)
 
@@ -12,13 +13,11 @@ export default function Pricing() {
 
     const { data } = await supabase.auth.getUser()
 
-    // 🔐 Jeśli NIE zalogowany → rejestracja
     if (!data.user) {
       router.push('/register')
       return
     }
 
-    // ✅ Jeśli zalogowany → Stripe
     const res = await fetch('/api/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
