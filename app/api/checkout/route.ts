@@ -1,34 +1,41 @@
 import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+})
 
 export async function POST(req: Request) {
   const { plan, userId } = await req.json()
 
-  const priceMap: Record<string, string> = {
-    Podstawowy: 'price_1T2cwXBKaFMW1zBpFXvGBqF9',
-    Premium: 'price_1T2d0RBKaFMW1zBpFPzmYkzq',
-    'Pro+': 'price_1T2d2sBKaFMW1zBpq0nSyX9b',
+  const priceId =
+    plan === 'Podstawowy'
+      ? process.env.STRIPE_PRICE_BASIC
+      : plan === 'Premium'
+      ? process.env.STRIPE_PRICE_PREMIUM
+      : process.env.STRIPE_PRICE_PRO
+
+  if (!priceId) {
+    return NextResponse.json(
+      { error: 'Price ID not found' },
+      { status: 400 }
+    )
   }
 
   const session = await stripe.checkout.sessions.create({
-    mode: 'payment',
-
+    mode: 'subscription',
+    payment_method_types: ['card'],
     line_items: [
       {
-        price: priceMap[plan],
+        price: priceId,
         quantity: 1,
       },
     ],
-
-    metadata: {
-      userId: userId, // 🔥 KLUCZOWE
-      plan: plan,
-    },
-
     success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/success`,
     cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/pricing`,
+    metadata: {
+      userId,
+      plan,
+    },
   })
 
   return NextResponse.json({ url: session.url })
