@@ -3,20 +3,25 @@
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { useEffect } from 'react'
 
 export default function PricingClient() {
   const router = useRouter()
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null)
+  const searchParams = useSearchParams()
+const autoPlan = searchParams.get('plan')
 
   const handleCheckout = async (plan: string) => {
     setLoadingPlan(plan)
+  
 
     const { data } = await supabase.auth.getUser()
 
     if (!data.user) {
-      router.push('/register')
-      return
-    }
+  router.push(`/register?plan=${plan}`)
+  return
+}
 
     const res = await fetch('/api/checkout', {
       method: 'POST',
@@ -30,6 +35,11 @@ export default function PricingClient() {
     const result = await res.json()
     window.location.href = result.url
   }
+  useEffect(() => {
+  if (autoPlan) {
+    handleCheckout(autoPlan)
+  }
+}, [autoPlan])
 
   return (
     <div className="min-h-screen p-10 bg-gray-100 text-gray-900 text-center">
