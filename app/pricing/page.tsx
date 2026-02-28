@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import PricingClient from './PricingClient'
 
 export default function PricingPage() {

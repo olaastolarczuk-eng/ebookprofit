@@ -24,10 +24,11 @@ export const metadata = {
     ],
   },
 
-  icons: {
+   icons: {
     icon: '/favicon.ico',
   },
-
+}
+export const viewport = {
   themeColor: '#000000',
 }
 
