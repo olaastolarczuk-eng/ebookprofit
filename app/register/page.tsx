@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 
 export default function Register() {
   const [email, setEmail] = useState('')
@@ -10,6 +11,9 @@ export default function Register() {
   const [emailSent, setEmailSent] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
   const router = useRouter()
+  const searchParams = useSearchParams()
+const selectedPlan = searchParams.get('plan')
+  
 
   const handleRegister = async () => {
     setErrorMsg('')
@@ -18,7 +22,9 @@ export default function Register() {
       email,
       password,
       options: {
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/dashboard`,
+        emailRedirectTo: selectedPlan
+  ? `${process.env.NEXT_PUBLIC_SITE_URL}/pricing?plan=${selectedPlan}`
+  : `${process.env.NEXT_PUBLIC_SITE_URL}/dashboard`,
       },
     })
 
