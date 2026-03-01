@@ -33,13 +33,6 @@ const autoPlan = searchParams.get('plan')
     })
 
     const result = await res.json()
-console.log('CHECKOUT RESULT:', result)
-
-if (!result.url) {
-  alert('Błąd checkout – brak URL')
-  return
-}
-
 window.location.href = result.url
   }
   useEffect(() => {
