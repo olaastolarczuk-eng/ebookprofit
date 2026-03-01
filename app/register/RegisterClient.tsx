@@ -23,8 +23,8 @@ const selectedPlan = searchParams.get('plan')
       password,
       options: {
         emailRedirectTo: selectedPlan
-  ? `${process.env.NEXT_PUBLIC_SITE_URL}/pricing?plan=${selectedPlan}`
-  : `${process.env.NEXT_PUBLIC_SITE_URL}/dashboard`,
+  ? `${process.env.NEXT_PUBLIC_SITE_URL}/login?plan=${selectedPlan}`
+  : `${process.env.NEXT_PUBLIC_SITE_URL}/login`,
       },
     })
 

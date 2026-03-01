@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import { useSearchParams } from 'next/navigation'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -11,6 +12,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
+  const searchParams = useSearchParams()
+const selectedPlan = searchParams.get('plan')
 
   const handleLogin = async () => {
     setLoading(true)
@@ -27,9 +30,12 @@ export default function LoginPage() {
       return
     }
 
-    router.push('/dashboard')
+    if (selectedPlan) {
+  router.push(`/pricing?plan=${selectedPlan}`)
+} else {
+  router.push('/dashboard')
   }
-
+}
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
