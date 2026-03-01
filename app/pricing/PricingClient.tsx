@@ -19,7 +19,7 @@ const autoPlan = searchParams.get('plan')
     const { data } = await supabase.auth.getUser()
 
     if (!data.user) {
-  router.push(`/register?plan=${plan}`)
+  window.location.href = `/register?plan=${plan}`
   return
 }
 
