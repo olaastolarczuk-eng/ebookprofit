@@ -1,7 +1,10 @@
+export const runtime = 'nodejs'
+
 import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+  apiVersion: '2024-06-20',
 })
 
 export async function POST(req: Request) {
@@ -15,30 +18,27 @@ export async function POST(req: Request) {
       : process.env.STRIPE_PRICE_PRO
 
   if (!priceId) {
-    return NextResponse.json(
-      { error: 'Price ID not found' },
-      { status: 400 }
-    )
+    return NextResponse.json({ error: 'Price ID not found' }, { status: 400 })
   }
 
   const session = await stripe.checkout.sessions.create({
-  mode: 'payment',
-  automatic_payment_methods: {
-    enabled: true,
-  },
-  line_items: [
-    {
-      price: priceId,
-      quantity: 1,
+    mode: 'payment',
+    automatic_payment_methods: {
+      enabled: true,
     },
-  ],
-  success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/success`,
-  cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/pricing`,
-  metadata: {
-    userId,
-    plan,
-  },
-})
+    line_items: [
+      {
+        price: priceId,
+        quantity: 1,
+      },
+    ],
+    success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/success`,
+    cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/pricing`,
+    metadata: {
+      userId,
+      plan,
+    },
+  })
 
   return NextResponse.json({ url: session.url })
 }
