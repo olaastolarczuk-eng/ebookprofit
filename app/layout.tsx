@@ -6,8 +6,9 @@ export const metadata = {
   description:
     'Generator ebooków AI. Twórz, eksportuj i sprzedawaj własne ebooki bez pisania.',
 
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL!),
-
+  metadataBase: new URL(
+  process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+),
   openGraph: {
     title: 'EbookProfit',
     description:
