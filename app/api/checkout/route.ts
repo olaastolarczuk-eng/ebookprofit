@@ -34,7 +34,7 @@ export async function POST(req: Request) {
       userId,
       plan,
     },
-  })
+  } as Stripe.Checkout.SessionCreateParams)
 
   return NextResponse.json({ url: session.url })
 }
