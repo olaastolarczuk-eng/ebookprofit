@@ -19,7 +19,7 @@ const autoPlan = searchParams.get('plan')
     const { data } = await supabase.auth.getUser()
 
     if (!data.user) {
-  window.location.href = `/register?plan=${plan}`
+  router.push(`/register?plan=${plan}`)
   return
 }
 
@@ -43,9 +43,17 @@ if (!result.url) {
 window.location.href = result.url
   }
   useEffect(() => {
-  if (autoPlan) {
-    handleCheckout(autoPlan)
+  const autoCheckout = async () => {
+    if (!autoPlan) return
+
+    const { data } = await supabase.auth.getUser()
+
+    if (data.user) {
+      handleCheckout(autoPlan)
+    }
   }
+
+  autoCheckout()
 }, [autoPlan])
 
   return (
