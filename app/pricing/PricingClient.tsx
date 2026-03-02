@@ -33,10 +33,10 @@ const autoPlan = searchParams.get('plan')
     })
 
     const result = await res.json()
+console.log(result)
 
 if (!result.url) {
-  alert(result.error || 'Błąd Stripe')
-  console.error(result)
+  alert(result.error || 'Stripe error')
   return
 }
 
