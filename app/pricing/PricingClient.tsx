@@ -35,8 +35,8 @@ const autoPlan = searchParams.get('plan')
     const result = await res.json()
 
 if (!result.url) {
+  alert(result.error || 'Błąd Stripe')
   console.error(result)
-  alert('Błąd tworzenia sesji Stripe')
   return
 }
 
