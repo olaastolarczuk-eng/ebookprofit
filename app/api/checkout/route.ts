@@ -22,21 +22,23 @@ export async function POST(req: Request) {
   }
 
   const session = await stripe.checkout.sessions.create({
-    mode: 'payment',
-    payment_method_types: ['card'],
-    line_items: [
-      {
-        price: priceId,
-        quantity: 1,
-      },
-    ],
-    success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/success`,
-    cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/pricing`,
-    metadata: {
-      userId,
-      plan,
+  mode: 'payment',
+  automatic_payment_methods: {
+    enabled: true,
+  },
+  line_items: [
+    {
+      price: priceId,
+      quantity: 1,
     },
-  })
+  ],
+  success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/success`,
+  cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/pricing`,
+  metadata: {
+    userId,
+    plan,
+  },
+})
 
   return NextResponse.json({ url: session.url })
 }
