@@ -39,6 +39,8 @@ useEffect(() => {
   .eq('id', data.user.id)
   .maybeSingle()
 
+  console.log('PROFILE FROM DB:', profile)
+
 if (error) {
   console.log('Profile error:', error)
   setAuthLoading(false)
@@ -48,7 +50,7 @@ if (error) {
 if (!profile) {
   console.log('Profil nie istnieje')
   setAuthLoading(false)
-  
+  return 
 }
 
     // 🔁 RESET MIESIĘCZNY
