@@ -269,10 +269,13 @@ useEffect(() => {
 
         // nagłówki
         if (/^\d+(\.\d+)?\./.test(clean)) {
-          if (clean === lastHeading) return ''
-          lastHeading = clean
-          return `<h2>${clean}</h2>`
-        }
+  const normalized = clean.replace(/\s+/g, ' ').trim()
+
+  if (normalized === lastHeading) return ''
+
+  lastHeading = normalized
+  return `<h2>${normalized}</h2>`
+}
 
         // lista
         if (clean.startsWith('- ')) {
