@@ -21,16 +21,15 @@ export async function POST(req: Request) {
   let event: Stripe.Event
 
   try {
-  event = stripe.webhooks.constructEvent(
-    body,
-    sig,
-    process.env.STRIPE_WEBHOOK_SECRET!
-  )
-} catch (err) {
-  console.error('❌ Webhook signature error:', err)
-  return NextResponse.json({ error: 'Webhook error' }, { status: 400 })
-}
-
+    event = stripe.webhooks.constructEvent(
+      body,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET!
+    )
+  } catch (err) {
+    console.error('❌ Webhook signature error:', err)
+    return NextResponse.json({ error: 'Webhook error' }, { status: 400 })
+  }
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session
@@ -39,8 +38,12 @@ export async function POST(req: Request) {
     const plan = session.metadata?.plan
     const email = session.customer_details?.email
 
+    console.log('🔥 WEBHOOK ODPALONY')
+    console.log('➡ userId:', userId)
+    console.log('➡ plan:', plan)
+
     if (userId && plan) {
-      await supabase
+      const { data, error } = await supabase
         .from('profiles')
         .update({
           plan,
@@ -49,8 +52,12 @@ export async function POST(req: Request) {
           ).toISOString(),
         })
         .eq('id', userId)
+        .select()
+
+      console.log('🟢 UPDATE DATA:', data)
+      console.log('🔴 UPDATE ERROR:', error)
     }
-console.log('✅ Plan updated for user:', userId)
+
 
     // 🔥 WYŚLIJ MAILA
     if (email && plan) {
