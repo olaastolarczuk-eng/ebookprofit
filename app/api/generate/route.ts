@@ -49,10 +49,15 @@ Zasady:
           {
             role: 'user',
             content: `
-Napisz rozdział ebooka.
+Napisz treść rozdziału ebooka.
 
 Temat ebooka: "${topic}"
 Tytuł rozdziału: "${chapterTitle}"
+
+WAŻNE:
+- Nie powtarzaj tytułu rozdziału w treści.
+- Nie zaczynaj od nagłówka ani numeru rozdziału.
+- Zacznij od razu od pierwszego akapitu.
 
 Wymagania:
 - długość: 800–1200 słów
@@ -71,7 +76,12 @@ Wymagania:
     let fullEbook = `Tytuł: ${topic}\n\nSpis treści:\n${toc}\n\n`
 
     chapterResults.forEach((result, index) => {
-      const chapterText = result.choices[0].message.content
+      let chapterText = result.choices[0].message.content || ''
+
+// usuń jeśli model powtórzył tytuł
+if (chapterText.startsWith(chapters[index])) {
+  chapterText = chapterText.replace(chapters[index], '').trim()
+}
       fullEbook += `\n\n${chapters[index]}\n\n${chapterText}\n`
     })
 
