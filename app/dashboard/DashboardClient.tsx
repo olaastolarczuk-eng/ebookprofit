@@ -291,7 +291,11 @@ useEffect(() => {
       }
       inToc = false
     }
-
+    
+    // usuń nagłówki typu "Rozdział 1. ..."
+if (/^rozdział\s+\d+\./i.test(clean)) {
+  return
+}
     // ===== NAGŁÓWKI ROZDZIAŁÓW =====
     if (/^\d+(\.\d+)?\./.test(clean)) {
   const normalized = clean.replace(/\s+/g, ' ').trim()
