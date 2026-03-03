@@ -252,6 +252,7 @@ useEffect(() => {
   function textToHtml(text: string) {
   const lines = text.split('\n')
   let html = ''
+  let inList = false
 
   lines.forEach((line) => {
     let clean = line.trim()
@@ -270,21 +271,37 @@ useEffect(() => {
       clean = clean.replace(/^rozdział\s+/i, '')
     }
 
-    // Nagłówki numerowane
+    // Numerowany nagłówek
     if (/^\d+\./.test(clean)) {
-      html += `<h2 style="margin-top:50px;margin-bottom:20px;font-size:24px;font-weight:bold;">${clean}</h2>`
+      if (inList) {
+        html += `</ul>`
+        inList = false
+      }
+
+      html += `<h2 style="margin-top:40px;margin-bottom:20px;">${clean}</h2>`
       return
     }
 
     // Lista
     if (clean.startsWith('- ')) {
-      html += `<li style="margin-bottom:6px;">${clean.replace('- ', '')}</li>`
+      if (!inList) {
+        html += `<ul style="margin-bottom:20px;padding-left:20px;">`
+        inList = true
+      }
+
+      html += `<li>${clean.replace('- ', '')}</li>`
       return
     }
 
-    // Paragraf
-    html += `<p style="margin-bottom:18px;line-height:1.8;font-size:16px;">${clean}</p>`
+    if (inList) {
+      html += `</ul>`
+      inList = false
+    }
+
+    html += `<p style="margin-bottom:16px;line-height:1.7;">${clean}</p>`
   })
+
+  if (inList) html += `</ul>`
 
   return html
 }
@@ -505,13 +522,10 @@ useEffect(() => {
               Pobierz wersję do edycji (DOCX)
             </button>
           </div>
-          {/*
-<EbookEditor
+          <EbookEditor
   content={textToHtml(ebook)}
   onChange={setEbook}
 />
-*/}
-<div dangerouslySetInnerHTML={{ __html: textToHtml(ebook) }} />
           /
         </div>
       )}
