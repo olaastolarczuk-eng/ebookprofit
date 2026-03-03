@@ -73,19 +73,30 @@ Wymagania:
 
    const chapterResults = await Promise.all(chapterPromises)
 
-let fullEbook = `Tytuł: ${topic}\n\nSpis treści:\n${toc}\n\n`
+let fullEbook = `Tytuł: ${topic}\n\n===SPIS_TRESCI===\n${toc}\n===KONIEC_SPISU===\n\n`
+
+const seenHeadings = new Set<string>()
 
 chapterResults.forEach((result) => {
   let chapterText = result.choices[0].message.content || ''
 
-  const lines = chapterText.split('\n').filter(l => l.trim() !== '')
+  const lines = chapterText.split('\n')
 
-  // jeśli dwie pierwsze linie są identyczne → usuń jedną
-  if (lines.length > 1 && lines[0].trim() === lines[1].trim()) {
-    lines.shift()
-  }
+  const cleanedLines = lines.filter((line) => {
+    const trimmed = line.trim()
 
-  fullEbook += `\n\n${lines.join('\n').trim()}\n`
+    // wykryj nagłówki typu "2. Coś tam"
+    if (/^\d+\.\s+/.test(trimmed)) {
+      if (seenHeadings.has(trimmed)) {
+        return false // usuń duplikat
+      }
+      seenHeadings.add(trimmed)
+    }
+
+    return true
+  })
+
+  fullEbook += `\n\n${cleanedLines.join('\n').trim()}\n`
 })
 
     return NextResponse.json({ text: fullEbook })
