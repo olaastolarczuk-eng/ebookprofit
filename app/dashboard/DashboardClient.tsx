@@ -48,7 +48,7 @@ if (error) {
 if (!profile) {
   console.log('Profil nie istnieje')
   setAuthLoading(false)
-  return
+  
 }
 
     // 🔁 RESET MIESIĘCZNY
