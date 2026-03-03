@@ -292,9 +292,9 @@ useEffect(() => {
       inToc = false
     }
     
-    // usuń nagłówki typu "Rozdział 1. ..."
+// jeśli linia zaczyna się od "Rozdział X." → usuń słowo "Rozdział"
 if (/^rozdział\s+\d+\./i.test(clean)) {
-  return
+  clean = clean.replace(/^rozdział\s+/i, '')
 }
     // ===== NAGŁÓWKI ROZDZIAŁÓW =====
     if (/^\d+(\.\d+)?\./.test(clean)) {
