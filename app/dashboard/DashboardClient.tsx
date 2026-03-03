@@ -251,17 +251,12 @@ useEffect(() => {
 
   function textToHtml(text: string) {
   const lines = text.split('\n')
-
-  const seenHeadings = new Set<string>()
-  let inToc = false
   let html = ''
-  let tocItems: string[] = []
 
   lines.forEach((line) => {
     let clean = line.trim()
     if (!clean) return
 
-    // usuwanie markdownu
     clean = clean
       .replace(/^####\s*/, '')
       .replace(/^###\s*/, '')
@@ -270,61 +265,26 @@ useEffect(() => {
       .replace(/\*\*/g, '')
       .trim()
 
-    // ===== WYKRYCIE SPISU TREŚCI =====
-    if (clean.toLowerCase().includes('spis treści')) {
-      inToc = true
-      html += `<h2>Spis treści</h2>`
+    // Zamień "Rozdział 1." na "1."
+    if (/^rozdział\s+\d+\./i.test(clean)) {
+      clean = clean.replace(/^rozdział\s+/i, '')
+    }
+
+    // Nagłówki numerowane
+    if (/^\d+\./.test(clean)) {
+      html += `<h2 style="margin-top:50px;margin-bottom:20px;font-size:24px;font-weight:bold;">${clean}</h2>`
       return
     }
 
-    // jeśli jesteśmy w spisie treści i linia to numerowany punkt
-    if (inToc && /^\d+\./.test(clean)) {
-      tocItems.push(`<li>${clean}</li>`)
-      return
-    }
-
-    // jeśli skończyły się numerowane linie → kończymy spis
-    if (inToc && !/^\d+\./.test(clean)) {
-      if (tocItems.length > 0) {
-        html += `<ul>${tocItems.join('')}</ul>`
-        tocItems = []
-      }
-      inToc = false
-    }
-    
-// jeśli linia zaczyna się od "Rozdział X." → usuń słowo "Rozdział"
-if (/^rozdział\s+\d+\./i.test(clean)) {
-  clean = clean.replace(/^rozdział\s+/i, '')
-}
-    // ===== NAGŁÓWKI ROZDZIAŁÓW =====
-    if (/^\d+(\.\d+)?\./.test(clean)) {
-  const normalized = clean.replace(/\s+/g, ' ').trim()
-
-  if (seenHeadings.has(normalized)) return
-
-  seenHeadings.add(normalized)
-
-  // zapamiętaj czysty tytuł bez numeru
-  const titleWithoutNumber = normalized.replace(/^\d+\.\s*/, '')
-  seenHeadings.add(titleWithoutNumber)
-
-  html += `<h2>${normalized}</h2>`
-  return
-}
-
-    // ===== LISTY =====
+    // Lista
     if (clean.startsWith('- ')) {
-      html += `<li>${clean.replace('- ', '')}</li>`
+      html += `<li style="margin-bottom:6px;">${clean.replace('- ', '')}</li>`
       return
     }
 
-    html += `<p>${clean}</p>`
+    // Paragraf
+    html += `<p style="margin-bottom:18px;line-height:1.8;font-size:16px;">${clean}</p>`
   })
-
-  // zabezpieczenie gdyby spis był na końcu
-  if (tocItems.length > 0) {
-    html += `<ul>${tocItems.join('')}</ul>`
-  }
 
   return html
 }
