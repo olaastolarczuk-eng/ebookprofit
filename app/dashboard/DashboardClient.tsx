@@ -46,20 +46,7 @@ if (error) {
 }
 
 if (!profile) {
-  console.log('Brak profilu — tworzę nowy')
-
-  const { data: newProfile } = await supabase
-    .from('profiles')
-    .insert({
-      id: data.user.id,
-      email: data.user.email,
-      plan: 'Brak',
-      ebooks_this_month: 0,
-    })
-    .select()
-    .single()
-
-  setUserData(newProfile)
+  console.log('Profil nie istnieje')
   setAuthLoading(false)
   return
 }
