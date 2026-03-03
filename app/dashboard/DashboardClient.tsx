@@ -507,11 +507,14 @@ useEffect(() => {
               Pobierz wersję do edycji (DOCX)
             </button>
           </div>
-          {/* EDYTOR */}
-          <EbookEditor
-            content={textToHtml(ebook)}
-            onChange={setEbook}
-          />
+          {/*
+<EbookEditor
+  content={textToHtml(ebook)}
+  onChange={setEbook}
+/>
+*/}
+<div dangerouslySetInnerHTML={{ __html: textToHtml(ebook) }} />
+          /
         </div>
       )}
             <div className="mt-12">
