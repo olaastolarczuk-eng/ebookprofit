@@ -46,6 +46,7 @@ export async function POST(req: Request) {
       const { data, error } = await supabase
         .from('profiles')
         .update({
+          id: userId,
           plan,
           plan_expires: new Date(
             Date.now() + 30 * 24 * 60 * 60 * 1000
