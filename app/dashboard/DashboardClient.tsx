@@ -251,41 +251,46 @@ useEffect(() => {
 
 
   function textToHtml(text: string) {
-    const lines = text.split('\n')
-    let lastHeading = ''
+  const lines = text.split('\n')
 
-    return lines
-      .map((line) => {
-        let clean = line.trim()
-        if (!clean) return '<p></p>'
+  const seenHeadings = new Set<string>()
 
-        // usuwanie markdownu
-        clean = clean
-          .replace(/^####\s*/, '')
-          .replace(/^###\s*/, '')
-          .replace(/^##\s*/, '')
-          .replace(/^#\s*/, '')
-          .replace(/\*\*/g, '')
+  return lines
+    .map((line) => {
+      let clean = line.trim()
+      if (!clean) return '<p></p>'
 
-        // nagłówki
-        if (/^\d+(\.\d+)?\./.test(clean)) {
-  const normalized = clean.replace(/\s+/g, ' ').trim()
+      // usuwanie markdownu
+      clean = clean
+        .replace(/^####\s*/, '')
+        .replace(/^###\s*/, '')
+        .replace(/^##\s*/, '')
+        .replace(/^#\s*/, '')
+        .replace(/\*\*/g, '')
+        .trim()
 
-  if (normalized === lastHeading) return ''
+      // ===== NAGŁÓWKI =====
+      if (/^\d+(\.\d+)?\./.test(clean)) {
+        const normalized = clean.replace(/\s+/g, ' ').trim()
 
-  lastHeading = normalized
-  return `<h2>${normalized}</h2>`
-}
-
-        // lista
-        if (clean.startsWith('- ')) {
-          return `<ul><li>${clean.replace('- ', '')}</li></ul>`
+        if (seenHeadings.has(normalized)) {
+          return '' // 🔥 usuwa duplikat
         }
 
-        return `<p>${clean}</p>`
-      })
-      .join('')
-  }
+        seenHeadings.add(normalized)
+        return `<h2>${normalized}</h2>`
+      }
+
+      // ===== LISTY =====
+      if (clean.startsWith('- ')) {
+        return `<li>${clean.replace('- ', '')}</li>`
+      }
+
+      return `<p>${clean}</p>`
+    })
+    .join('')
+    .replace(/(<li>.*?<\/li>)/g, '<ul>$1</ul>')
+}
 
   if (authLoading) {
   return (
