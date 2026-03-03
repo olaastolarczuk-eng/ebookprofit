@@ -45,15 +45,16 @@ export async function POST(req: Request) {
     if (userId && plan) {
       const { data, error } = await supabase
         .from('profiles')
-        .update({
-          id: userId,
-          plan,
-          plan_expires: new Date(
-            Date.now() + 30 * 24 * 60 * 60 * 1000
-          ).toISOString(),
-        })
-        .eq('id', userId)
-        .select()
+  .upsert({
+    id: userId,
+    email,
+    plan,
+    ebooks_this_month: 0,
+    month_reset: new Date().toISOString(),
+    plan_expires: new Date(
+      Date.now() + 30 * 24 * 60 * 60 * 1000
+    ).toISOString(),
+  })
 
       console.log('🟢 UPDATE DATA:', data)
       console.log('🔴 UPDATE ERROR:', error)
