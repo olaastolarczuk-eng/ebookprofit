@@ -82,7 +82,7 @@ Wymagania:
 if (chapterText.startsWith(chapters[index])) {
   chapterText = chapterText.replace(chapters[index], '').trim()
 }
-      fullEbook += `\n\n${chapters[index]}\n\n${chapterText}\n`
+      fullEbook += `\n\n${chapterText}\n`
     })
 
     return NextResponse.json({ text: fullEbook })
