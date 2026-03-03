@@ -71,19 +71,22 @@ Wymagania:
       })
     )
 
-    const chapterResults = await Promise.all(chapterPromises)
+   const chapterResults = await Promise.all(chapterPromises)
 
-    let fullEbook = `Tytuł: ${topic}\n\nSpis treści:\n${toc}\n\n`
+let fullEbook = `Tytuł: ${topic}\n\nSpis treści:\n${toc}\n\n`
 
-    chapterResults.forEach((result, index) => {
-      let chapterText = result.choices[0].message.content || ''
+chapterResults.forEach((result) => {
+  let chapterText = result.choices[0].message.content || ''
 
-// usuń jeśli model powtórzył tytuł
-if (chapterText.startsWith(chapters[index])) {
-  chapterText = chapterText.replace(chapters[index], '').trim()
-}
-      fullEbook += `\n\n${chapterText}\n`
-    })
+  const lines = chapterText.split('\n').filter(l => l.trim() !== '')
+
+  // jeśli dwie pierwsze linie są identyczne → usuń jedną
+  if (lines.length > 1 && lines[0].trim() === lines[1].trim()) {
+    lines.shift()
+  }
+
+  fullEbook += `\n\n${lines.join('\n').trim()}\n`
+})
 
     return NextResponse.json({ text: fullEbook })
   } catch (err: any) {
