@@ -294,16 +294,19 @@ useEffect(() => {
 
     // ===== NAGŁÓWKI ROZDZIAŁÓW =====
     if (/^\d+(\.\d+)?\./.test(clean)) {
-      const normalized = clean.replace(/\s+/g, ' ').trim()
+  const normalized = clean.replace(/\s+/g, ' ').trim()
 
-      if (seenHeadings.has(normalized)) {
-        return
-      }
+  if (seenHeadings.has(normalized)) return
 
-      seenHeadings.add(normalized)
-      html += `<h2>${normalized}</h2>`
-      return
-    }
+  seenHeadings.add(normalized)
+
+  // zapamiętaj czysty tytuł bez numeru
+  const titleWithoutNumber = normalized.replace(/^\d+\.\s*/, '')
+  seenHeadings.add(titleWithoutNumber)
+
+  html += `<h2>${normalized}</h2>`
+  return
+}
 
     // ===== LISTY =====
     if (clean.startsWith('- ')) {
