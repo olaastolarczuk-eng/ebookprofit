@@ -250,58 +250,76 @@ useEffect(() => {
 }
 
   function textToHtml(text: string) {
+
   const lines = text.split('\n')
+
   let html = ''
-  let inList = false
+  let inToc = false
+  let tocItems: string[] = []
 
   lines.forEach((line) => {
+
     let clean = line.trim()
     if (!clean) return
 
+    // usuń znaczniki techniczne
+    if (clean.includes('===SPIS_TRESCI===')) return
+    if (clean.includes('===KONIEC_SPISU===')) return
+
+    // usuwanie markdown
     clean = clean
-      .replace(/^####\s*/, '')
-      .replace(/^###\s*/, '')
-      .replace(/^##\s*/, '')
-      .replace(/^#\s*/, '')
       .replace(/\*\*/g, '')
+      .replace(/####\s*/g, '')
+      .replace(/###\s*/g, '')
+      .replace(/##\s*/g, '')
+      .replace(/#\s*/g, '')
       .trim()
 
-    // Zamień "Rozdział 1." na "1."
-    if (/^rozdział\s+\d+\./i.test(clean)) {
-      clean = clean.replace(/^rozdział\s+/i, '')
+    // wykrycie spisu treści
+    if (clean.toLowerCase().includes('spis treści')) {
+      inToc = true
+      html += `<h2>Spis treści</h2>`
+      return
     }
 
-    // Numerowany nagłówek
+    // elementy spisu treści
+    if (inToc && /^\d+\./.test(clean)) {
+      tocItems.push(`<li>${clean}</li>`)
+      return
+    }
+
+    // koniec spisu
+    if (inToc && !/^\d+\./.test(clean)) {
+
+      if (tocItems.length > 0) {
+        html += `<ul class="list-decimal ml-6 mb-6">${tocItems.join('')}</ul>`
+        tocItems = []
+      }
+
+      inToc = false
+    }
+
+    // nagłówki rozdziałów
     if (/^\d+\./.test(clean)) {
-      if (inList) {
-        html += `</ul>`
-        inList = false
-      }
 
-      html += `<h2 style="margin-top:40px;margin-bottom:20px;">${clean}</h2>`
+      html += `<h2 class="text-2xl font-bold mt-8 mb-4">${clean}</h2>`
       return
     }
 
-    // Lista
+    // listy punktowane
     if (clean.startsWith('- ')) {
-      if (!inList) {
-        html += `<ul style="margin-bottom:20px;padding-left:20px;">`
-        inList = true
-      }
 
-      html += `<li>${clean.replace('- ', '')}</li>`
+      html += `<li class="ml-6 list-disc">${clean.replace('- ', '')}</li>`
       return
     }
 
-    if (inList) {
-      html += `</ul>`
-      inList = false
-    }
+    html += `<p class="mb-4 leading-relaxed">${clean}</p>`
 
-    html += `<p style="margin-bottom:16px;line-height:1.7;">${clean}</p>`
   })
 
-  if (inList) html += `</ul>`
+  if (tocItems.length > 0) {
+    html += `<ul class="list-decimal ml-6 mb-6">${tocItems.join('')}</ul>`
+  }
 
   return html
 }
