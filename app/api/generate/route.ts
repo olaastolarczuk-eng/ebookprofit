@@ -11,7 +11,7 @@ export async function POST(req: Request) {
 
     // 1. Generowanie spisu treści
     const tocCompletion = await openai.chat.completions.create({
-      model: 'gpt-4.1-mini',
+      model: 'gpt-4o-mini',
       messages: [
         {
           role: 'system',
@@ -53,6 +53,32 @@ Napisz treść rozdziału ebooka.
 
 Temat ebooka: "${topic}"
 Tytuł rozdziału: "${chapterTitle}"
+
+Struktura rozdziału:
+
+1. Krótkie wprowadzenie do tematu
+
+2. Sekcja pierwsza – wyjaśnienie tematu
+
+3. Sekcja druga – praktyczne strategie
+
+4. Sekcja trzecia – przykłady lub case study
+
+5. Wskazówki praktyczne (lista punktowana)
+
+6. Podsumowanie rozdziału
+
+
+Zasady:
+
+- nie powtarzaj tytułu rozdziału
+- nie używaj znaków ### ani **
+- pisz akapitami
+- używaj list punktowanych zaczynających się od "- "
+- język: polski
+- styl: profesjonalny ale przystępny
+- długość: 800–1200 słów
+
 
 WAŻNE:
 - Nie powtarzaj tytułu rozdziału w treści.
