@@ -289,15 +289,16 @@ useEffect(() => {
     }
 
     // koniec spisu
-    if (inToc && !/^\d+\./.test(clean)) {
+    if (clean.includes('===KONIEC_SPISU===')) {
 
-      if (tocItems.length > 0) {
-        html += `<ul class="list-decimal ml-6 mb-6">${tocItems.join('')}</ul>`
-        tocItems = []
-      }
+  if (tocItems.length > 0) {
+    html += `<ul class="list-decimal ml-6 mb-6">${tocItems.join('')}</ul>`
+    tocItems = []
+  }
 
-      inToc = false
-    }
+  inToc = false
+  return
+}
 
     // nagłówki rozdziałów
     if (/^\d+\./.test(clean)) {
