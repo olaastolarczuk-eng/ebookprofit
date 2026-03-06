@@ -135,14 +135,24 @@ export async function POST(req: Request) {
       const isMainChapter = clean.match(/^\d+\.\s/)
 
       if (!inToc && isMainChapter) {
-        doc.moveDown()
-        doc.fontSize(headingSize + 4).text(clean, {
-        align: 'center',
-        })
-        doc.moveDown()
-        doc.fontSize(bodySize)
-        continue
-      }
+
+  // jeśli mało miejsca na stronie → nowa strona
+  if (doc.y > doc.page.height - 150) {
+    doc.addPage()
+  }
+
+  doc.moveDown()
+
+  doc.fontSize(headingSize + 4).text(clean, {
+    align: 'center',
+  })
+
+  doc.moveDown()
+
+  doc.fontSize(bodySize)
+
+  continue
+}
 
       // ===== WSKAZÓWKA BOX =====
       if (clean.toLowerCase().startsWith('wskazówka')) {
