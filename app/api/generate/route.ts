@@ -22,7 +22,7 @@ export async function POST(req: Request) {
           content: `Stwórz spis treści ebooka na temat: "${topic}".
 
 Zasady:
-- 5–6 rozdziałów
+- 4–5 rozdziałów
 - logiczna, sprzedażowa struktura
 - nie pisz nagłówka "Spis treści"
 - nie powtarzaj spisu
@@ -77,9 +77,8 @@ Zasady:
 - nie używaj znaków ### ani **
 - pisz akapitami
 - używaj list punktowanych zaczynających się od "- "
-- język: polski
 - styl: profesjonalny ale przystępny
-- długość: 400–600 słów
+
 
 
 WAŻNE:
