@@ -92,6 +92,10 @@ export async function POST(req: Request) {
     for (const rawLine of lines) {
       let clean = rawLine.trim()
 
+      // usuń znaczniki techniczne
+      if (clean.includes('===SPIS_TRESCI===')) continue
+      if (clean.includes('===KONIEC_SPISU===')) continue
+
       if (
         clean.toLowerCase().startsWith('tytuł:') ||
         clean.toLowerCase().startsWith('spis treści')
@@ -142,26 +146,47 @@ export async function POST(req: Request) {
 
       // ===== WSKAZÓWKA BOX =====
       if (clean.toLowerCase().startsWith('wskazówka')) {
-        doc.moveDown()
-        const boxHeight =
-          doc.heightOfString(clean, { width: 420 }) + 20
 
-        doc.rect(doc.x, doc.y, 440, boxHeight).stroke()
+        const boxWidth =
+          doc.page.width -
+          doc.page.margins.left -
+          doc.page.margins.right
+
+        doc.moveDown()
+
+        const boxHeight =
+          doc.heightOfString(clean, { width: boxWidth - 20 }) + 20
+
+        doc.rect(doc.x, doc.y, boxWidth, boxHeight).stroke()
 
         doc.text(clean, doc.x + 10, doc.y + 10, {
-          width: 420,
+          width: boxWidth - 20,
         })
 
         doc.moveDown(3)
-        return
+        doc.x = doc.page.margins.left
+        continue
       }
 
       // ===== PRZYKŁAD BOX =====
       if (clean.toLowerCase().startsWith('przykład')) {
+
+        const boxWidth =
+          doc.page.width -
+          doc.page.margins.left -
+          doc.page.margins.right
+
         doc.moveDown()
-        const h = doc.heightOfString(clean, { width: 420 }) + 20
-        doc.rect(doc.x, doc.y, 440, h).dash(5, {}).stroke().undash()
-        doc.text(clean, doc.x + 10, doc.y + 10, { width: 420 })
+
+        const h =
+          doc.heightOfString(clean, { width: boxWidth - 20 }) + 20
+
+        doc.rect(doc.x, doc.y, boxWidth, h).dash(5, {}).stroke().undash()
+
+        doc.text(clean, doc.x + 10, doc.y + 10, {
+          width: boxWidth - 20,
+        })
+
         doc.moveDown(3)
         doc.x = doc.page.margins.left
         continue
@@ -179,15 +204,15 @@ export async function POST(req: Request) {
           doc.page.margins.left -
           doc.page.margins.right,
       })
+
       doc.moveDown()
     }
 
     doc.end()
     const pdf = await pdfPromise
-const uint8Array = new Uint8Array(pdf)
+    const uint8Array = new Uint8Array(pdf)
 
-return new NextResponse(uint8Array, {
-
+    return new NextResponse(uint8Array, {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': 'attachment; filename="ebook.pdf"',
