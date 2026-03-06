@@ -24,6 +24,8 @@ export async function POST(req: Request) {
 Zasady:
 - 5–6 rozdziałów
 - logiczna, sprzedażowa struktura
+- nie pisz nagłówka "Spis treści"
+- nie powtarzaj spisu
 - zwróć tylko listę rozdziałów`,
         },
       ],

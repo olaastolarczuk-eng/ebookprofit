@@ -308,10 +308,8 @@ useEffect(() => {
 
     // listy punktowane
     if (clean.startsWith('- ')) {
-
-      html += `<li class="ml-6 list-disc">${clean.replace('- ', '')}</li>`
-      return
-    }
+  html += `<li class="ml-6 list-disc font-semibold">${clean.replace('- ', '')}</li>`
+}
 
     html += `<p class="mb-4 leading-relaxed">${clean}</p>`
 
