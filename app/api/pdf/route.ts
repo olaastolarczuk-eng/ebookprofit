@@ -141,16 +141,20 @@ export async function POST(req: Request) {
       }
 
       // ===== WSKAZÓWKA BOX =====
-      const boxWidth =
-  doc.page.width - doc.page.margins.left - doc.page.margins.right
+      if (clean.toLowerCase().startsWith('wskazówka')) {
+        doc.moveDown()
+        const boxHeight =
+          doc.heightOfString(clean, { width: 420 }) + 20
 
-const h = doc.heightOfString(clean, { width: boxWidth - 20 }) + 20
+        doc.rect(doc.x, doc.y, 440, boxHeight).stroke()
 
-doc.rect(doc.x, doc.y, boxWidth, h).stroke()
+        doc.text(clean, doc.x + 10, doc.y + 10, {
+          width: 420,
+        })
 
-doc.text(clean, doc.x + 10, doc.y + 10, {
-  width: boxWidth - 20,
-})
+        doc.moveDown(3)
+        return
+      }
 
       // ===== PRZYKŁAD BOX =====
       if (clean.toLowerCase().startsWith('przykład')) {

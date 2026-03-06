@@ -22,7 +22,7 @@ export async function POST(req: Request) {
           content: `Stwórz spis treści ebooka na temat: "${topic}".
 
 Zasady:
-- 4–5 rozdziałów
+- 5–6 rozdziałów
 - logiczna, sprzedażowa struktura
 - nie pisz nagłówka "Spis treści"
 - nie powtarzaj spisu
