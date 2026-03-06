@@ -86,7 +86,9 @@ WAŻNE:
 - Zacznij od razu od pierwszego akapitu.
 
 Wymagania:
-- długość: 800–1200 słów
+- długość: 400–600 słów
+- pisz krótkimi akapitami (2–3 zdania)
+- unikaj bardzo długich bloków tekstu
 - styl: profesjonalny, biznesowy
 - dodawaj przykłady, case study i ciekawostki
 - język: polski
