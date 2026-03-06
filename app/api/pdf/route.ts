@@ -136,8 +136,8 @@ export async function POST(req: Request) {
 
       if (!inToc && isMainChapter) {
         doc.moveDown()
-        doc.fontSize(headingSize).text(clean, {
-          align: 'center',
+        doc.fontSize(headingSize + 4).text(clean, {
+        align: 'center',
         })
         doc.moveDown()
         doc.fontSize(bodySize)
@@ -159,9 +159,9 @@ export async function POST(req: Request) {
 
         doc.rect(doc.x, doc.y, boxWidth, boxHeight).stroke()
 
-        doc.text(clean, doc.x + 10, doc.y + 10, {
-          width: boxWidth - 20,
-        })
+        doc.text(clean, doc.x + 12, doc.y + 12, {
+  width: boxWidth - 24,
+})
 
         doc.moveDown(3)
         doc.x = doc.page.margins.left
@@ -198,14 +198,14 @@ export async function POST(req: Request) {
 
       doc.text(clean, {
         align: 'justify',
-        lineGap: lineGap,
+        lineGap: lineGap + 2,
         width:
           doc.page.width -
           doc.page.margins.left -
           doc.page.margins.right,
       })
 
-      doc.moveDown()
+      doc.moveDown(1.2)
     }
 
     doc.end()
