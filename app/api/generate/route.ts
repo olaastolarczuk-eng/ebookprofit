@@ -22,7 +22,7 @@ export async function POST(req: Request) {
           content: `Stwórz spis treści ebooka na temat: "${topic}".
 
 Zasady:
-- 7–8 rozdziałów
+- 5–6 rozdziałów
 - logiczna, sprzedażowa struktura
 - zwróć tylko listę rozdziałów`,
         },
@@ -77,19 +77,17 @@ Zasady:
 - używaj list punktowanych zaczynających się od "- "
 - język: polski
 - styl: profesjonalny ale przystępny
-- długość: 800–1200 słów
+- długość: 400–600 słów
 
 
 WAŻNE:
-- Nie powtarzaj tytułu rozdziału w treści.
-- Nie zaczynaj od nagłówka ani numeru rozdziału.
+- Zaczynaj od tytułu rozdziału w treści.
 - Zacznij od razu od pierwszego akapitu.
 
 Wymagania:
 - długość: 400–600 słów
 - pisz krótkimi akapitami (2–3 zdania)
 - unikaj bardzo długich bloków tekstu
-- styl: profesjonalny, biznesowy
 - dodawaj przykłady, case study i ciekawostki
 - język: polski
 `,
