@@ -5,18 +5,13 @@ import path from 'path'
 
 export async function POST(req: Request) {
   try {
-    const { text, title, style, cover } = await req.json()
 
-    let selectedFont = 'Inter-Regular.ttf'
-
-    if (style === 'book' || style === 'luxury') {
-      selectedFont = 'Merriweather-Regular.ttf'
-    }
+    const { text, title, cover } = await req.json()
 
     const fontPath = path.join(
       process.cwd(),
       'public/fonts',
-      selectedFont
+      'Inter-Regular.ttf'
     )
 
     if (!fs.existsSync(fontPath)) {
@@ -33,6 +28,7 @@ export async function POST(req: Request) {
     })
 
     const buffers: Buffer[] = []
+
     doc.on('data', (b) => buffers.push(b))
 
     const pdfPromise = new Promise<Buffer>((resolve) => {
@@ -41,6 +37,7 @@ export async function POST(req: Request) {
 
     // ===== OKŁADKA =====
     if (cover) {
+
       const img = Buffer.from(cover, 'base64')
 
       doc.image(img, 0, 0, {
@@ -51,34 +48,18 @@ export async function POST(req: Request) {
       doc.addPage()
     }
 
-    // ===== STYLE =====
-    let headingSize = 18
-    let bodySize = 12
-    let lineGap = 4
-
-    if (style === 'minimal') {
-      headingSize = 20
-      lineGap = 6
-    }
-
-    if (style === 'business') {
-      headingSize = 19
-      lineGap = 5
-    }
-
-    if (style === 'luxury') {
-      headingSize = 22
-      bodySize = 13
-      lineGap = 6
-    }
-
-    if (style === 'course') {
-      lineGap = 6
-    }
+    // ===== STAŁY STYL =====
+    const headingSize = 20
+    const bodySize = 12
+    const lineGap = 6
 
     // ===== TYTUŁ =====
     if (!cover && title) {
-      doc.fontSize(22).text(title, { align: 'center' })
+
+      doc.fontSize(24).text(title, {
+        align: 'center'
+      })
+
       doc.moveDown(2)
     }
 
@@ -118,14 +99,16 @@ export async function POST(req: Request) {
         continue
       }
 
-      // wykrywanie spisu treści
+      // ===== SPIS TREŚCI =====
       if (clean.match(/^\d+\./) && inToc) {
 
         tocItems++
 
         if (tocItems > 12) {
+
           inToc = false
           doc.addPage()
+
         }
 
       }
@@ -154,8 +137,7 @@ export async function POST(req: Request) {
         doc.moveDown()
 
         doc.fontSize(headingSize).text(clean, {
-          align: 'center',
-          lineBreak: true
+          align: 'center'
         })
 
         doc.moveDown()
@@ -204,11 +186,11 @@ export async function POST(req: Request) {
         const h =
           doc.heightOfString(clean, { width: boxWidth - 20 }) + 20
 
-        doc
-          .rect(doc.x, doc.y, boxWidth, h)
-          .dash(5, {})
-          .stroke()
-          .undash()
+        doc.rect(doc.x, doc.y, boxWidth, h)
+
+doc.dash(5, { space: 5 })
+doc.stroke()
+doc.undash()
 
         doc.text(clean, doc.x + 10, doc.y + 10, {
           width: boxWidth - 20,
@@ -228,7 +210,7 @@ export async function POST(req: Request) {
 
       doc.text(clean, {
         align: 'justify',
-        lineGap: lineGap + 2,
+        lineGap: lineGap,
         width:
           doc.page.width -
           doc.page.margins.left -

@@ -7,24 +7,17 @@ const openai = new OpenAI({
 
 export async function POST(req: Request) {
   try {
-    const { title, style, chapter } = await req.json()
 
-    let stylePrompt = 'minimalist ebook cover'
-
-    if (style === 'course') {
-      stylePrompt = 'modern online course ebook cover, bright colors'
-    }
-
-    if (style === 'book') {
-      stylePrompt = 'classic book cover, elegant, editorial style'
-    }
+    const { title, chapter } = await req.json()
 
     // domyślny prompt – okładka
     let prompt = `
 Professional ebook cover design.
 
 Title: ${title}
-Style: ${stylePrompt}
+
+Style:
+modern minimalist ebook cover
 
 Include:
 - strong visual illustration
@@ -38,6 +31,7 @@ No logos or watermarks.
 
     // jeśli to grafika rozdziału
     if (chapter) {
+
       prompt = `
 Illustration for an ebook chapter.
 
@@ -49,6 +43,7 @@ No text on the image.
 No logos or watermarks.
 Visually engaging and professional.
 `
+
     }
 
     const image = await openai.images.generate({
@@ -58,21 +53,26 @@ Visually engaging and professional.
     })
 
     if (!image.data || image.data.length === 0) {
-  return NextResponse.json(
-    { error: 'Nie udało się wygenerować okładki' },
-    { status: 500 }
-  )
-}
 
-const base64 = image.data[0].b64_json
+      return NextResponse.json(
+        { error: 'Nie udało się wygenerować okładki' },
+        { status: 500 }
+      )
 
-return NextResponse.json({ image: base64 })
+    }
+
+    const base64 = image.data[0].b64_json
+
+    return NextResponse.json({ image: base64 })
 
   } catch (err) {
+
     console.error('Cover error:', err)
+
     return NextResponse.json(
       { error: 'Cover generation failed' },
       { status: 500 }
     )
+
   }
 }

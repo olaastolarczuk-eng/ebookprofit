@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import EbookEditor from '@/components/EbookEditor'
-import StylePicker from '@/components/StylePicker'
 import MyEbooks from '@/components/MyEbooks'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
@@ -10,7 +9,6 @@ import { useRouter } from 'next/navigation'
 export default function Dashboard() {
   const router = useRouter()
   const [topic, setTopic] = useState('')
-  const [style, setStyle] = useState('minimal')
   const [loading, setLoading] = useState(false)
   const [ebook, setEbook] = useState('')
   const [cover, setCover] = useState<string | null>(null)
@@ -115,7 +113,6 @@ useEffect(() => {
           id: ebookId,
           content: ebook,
           topic,
-          style,
         }),
       })
 
@@ -126,11 +123,10 @@ useEffect(() => {
   }, 2000)
 
   return () => clearTimeout(timeout)
-}, [ebook, topic, style, ebookId])
+}, [ebook, topic, ebookId])
 
   const openEbook = (ebookData: any) => {
   setTopic(ebookData.topic)
-  setStyle(ebookData.style)
   setEbook(ebookData.content)
   setEbookId(ebookData.id) // ← konieczne do autosave
 }
@@ -177,7 +173,7 @@ useEffect(() => {
     const res = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ topic, style }),
+      body: JSON.stringify({ topic, }),
     })
 
     const data = await res.json()
@@ -195,7 +191,6 @@ useEffect(() => {
           title: topic,
           topic,
           content: data.text,
-          style,
         }),
       })
 
@@ -229,7 +224,6 @@ useEffect(() => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             title: topic,
-            style,
           }),
         })
 
@@ -423,11 +417,6 @@ useEffect(() => {
         className="p-2 border rounded w-full max-w-xl mb-4"
       />
 
-      {/* WYBÓR STYLU */}
-      <div className="mb-6">
-        <p className="font-semibold mb-3">Wybierz styl ebooka:</p>
-        <StylePicker value={style} onChange={setStyle} />
-      </div>
 
       <button
         onClick={generateEbook}
@@ -492,7 +481,6 @@ useEffect(() => {
                   body: JSON.stringify({
                     text: ebook,
                     title: topic || 'ebook',
-                    style,
                     cover,
                   }),
                 })
