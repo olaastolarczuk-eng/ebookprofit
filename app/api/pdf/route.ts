@@ -42,10 +42,12 @@ export async function POST(req: Request) {
     // ===== OKŁADKA =====
     if (cover) {
       const img = Buffer.from(cover, 'base64')
+
       doc.image(img, 0, 0, {
         width: doc.page.width,
         height: doc.page.height,
       })
+
       doc.addPage()
     }
 
@@ -74,7 +76,7 @@ export async function POST(req: Request) {
       lineGap = 6
     }
 
-    // ===== TYTUŁ (jeśli brak okładki) =====
+    // ===== TYTUŁ =====
     if (!cover && title) {
       doc.fontSize(22).text(title, { align: 'center' })
       doc.moveDown(2)
@@ -85,14 +87,15 @@ export async function POST(req: Request) {
     doc.moveDown(1)
 
     const lines = text.split('\n')
+
     let lastChapter: string | null = null
     let tocItems = 0
     let inToc = true
 
     for (const rawLine of lines) {
+
       let clean = rawLine.trim()
 
-      // usuń znaczniki techniczne
       if (clean.includes('===SPIS_TRESCI===')) continue
       if (clean.includes('===KONIEC_SPISU===')) continue
 
@@ -115,20 +118,28 @@ export async function POST(req: Request) {
         continue
       }
 
-      // wykrywanie pozycji spisu treści
+      // wykrywanie spisu treści
       if (clean.match(/^\d+\./) && inToc) {
+
         tocItems++
+
         if (tocItems > 12) {
           inToc = false
           doc.addPage()
         }
+
       }
 
       const match = clean.match(/^(\d+)\./)
+
       if (match) {
+
         const chapterNumber = match[1]
+
         if (chapterNumber === lastChapter) continue
+
         lastChapter = chapterNumber
+
       }
 
       // ===== NAGŁÓWKI ROZDZIAŁÓW =====
@@ -136,23 +147,23 @@ export async function POST(req: Request) {
 
       if (!inToc && isMainChapter) {
 
-  // jeśli mało miejsca na stronie → nowa strona
-  if (doc.y > doc.page.height - 150) {
-    doc.addPage()
-  }
+        if (doc.y > doc.page.height - 150) {
+          doc.addPage()
+        }
 
-  doc.moveDown()
+        doc.moveDown()
 
-  doc.fontSize(headingSize + 4).text(clean, {
-    align: 'center',
-  })
+        doc.fontSize(headingSize).text(clean, {
+          align: 'center',
+          lineBreak: true
+        })
 
-  doc.moveDown()
+        doc.moveDown()
 
-  doc.fontSize(bodySize)
+        doc.fontSize(bodySize)
 
-  continue
-}
+        continue
+      }
 
       // ===== WSKAZÓWKA BOX =====
       if (clean.toLowerCase().startsWith('wskazówka')) {
@@ -170,11 +181,13 @@ export async function POST(req: Request) {
         doc.rect(doc.x, doc.y, boxWidth, boxHeight).stroke()
 
         doc.text(clean, doc.x + 12, doc.y + 12, {
-  width: boxWidth - 24,
-})
+          width: boxWidth - 24,
+        })
 
         doc.moveDown(3)
+
         doc.x = doc.page.margins.left
+
         continue
       }
 
@@ -191,19 +204,26 @@ export async function POST(req: Request) {
         const h =
           doc.heightOfString(clean, { width: boxWidth - 20 }) + 20
 
-        doc.rect(doc.x, doc.y, boxWidth, h).dash(5, {}).stroke().undash()
+        doc
+          .rect(doc.x, doc.y, boxWidth, h)
+          .dash(5, {})
+          .stroke()
+          .undash()
 
         doc.text(clean, doc.x + 10, doc.y + 10, {
           width: boxWidth - 20,
         })
 
         doc.moveDown(3)
+
         doc.x = doc.page.margins.left
+
         continue
       }
 
       // ===== ZWYKŁY TEKST =====
       doc.x = doc.page.margins.left
+
       doc.fontSize(bodySize)
 
       doc.text(clean, {
@@ -216,10 +236,13 @@ export async function POST(req: Request) {
       })
 
       doc.moveDown(1.2)
+
     }
 
     doc.end()
+
     const pdf = await pdfPromise
+
     const uint8Array = new Uint8Array(pdf)
 
     return new NextResponse(uint8Array, {
@@ -228,8 +251,15 @@ export async function POST(req: Request) {
         'Content-Disposition': 'attachment; filename="ebook.pdf"',
       },
     })
+
   } catch (err) {
+
     console.error(err)
-    return NextResponse.json({ error: 'PDF error' }, { status: 500 })
+
+    return NextResponse.json(
+      { error: 'PDF error' },
+      { status: 500 }
+    )
+
   }
 }

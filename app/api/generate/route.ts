@@ -31,12 +31,19 @@ Zasady:
       ],
     })
 
-    const toc = tocCompletion.choices[0].message.content || ''
+    const toc = tocCompletion?.choices?.[0]?.message?.content || ''
 
     const chapters = toc
       .split('\n')
       .map((line) => line.trim())
       .filter((line) => line.length > 0)
+
+      if (!chapters.length) {
+  return NextResponse.json(
+    { error: 'Nie udało się wygenerować spisu treści' },
+    { status: 500 }
+  )
+}
 
     // 2. Generowanie rozdziałów równolegle
     const chapterPromises = chapters.map((chapterTitle) =>
