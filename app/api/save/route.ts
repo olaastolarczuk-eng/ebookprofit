@@ -30,7 +30,7 @@ export async function POST(req: Request) {
 
     // 📦 2. Pobierz dane z requestu
     const body = await req.json()
-    const { title, topic, content } = body
+    const { title, topic, content, cover } = body
 
     // 💾 3. Zapisz ebook przypisany do usera
     const { data, error } = await supabase
@@ -39,6 +39,7 @@ export async function POST(req: Request) {
         title,
         topic,
         content,
+        cover,
         user_id: user.id,
       })
       .select()

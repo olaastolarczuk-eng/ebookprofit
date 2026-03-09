@@ -3,48 +3,86 @@
 import { useEffect, useState } from 'react'
 
 export default function MyEbooks({ onOpen }: any) {
+
   const [ebooks, setEbooks] = useState<any[]>([])
 
   useEffect(() => {
+
     const load = async () => {
+
       try {
+
         const res = await fetch('/api/ebooks', {
-  credentials: 'include',
-})
+          credentials: 'include',
+        })
 
         const data = await res.json()
+
         setEbooks(data.ebooks || [])
+
       } catch (err) {
+
         console.log('Błąd ładowania ebooków')
+
       }
+
     }
 
     load()
+
   }, [])
+
 
   if (!ebooks.length) {
     return <div className="text-gray-500">Brak ebooków</div>
   }
 
+
   return (
+
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
       {ebooks.map((ebook) => (
+
         <div
           key={ebook.id}
           className="bg-white p-4 rounded shadow hover:shadow-lg transition cursor-pointer"
           onClick={() => onOpen(ebook)}
         >
+
+          {/* OKŁADKA */}
+
+          {ebook.cover && (
+
+            <img
+              src={`data:image/png;base64,${ebook.cover}`}
+              className="w-full h-48 object-cover rounded mb-3"
+            />
+
+          )}
+
+
+          {/* TYTUŁ */}
+
           <h3 className="font-semibold text-lg">
             {ebook.title}
           </h3>
+
+
+          {/* DATA */}
 
           <p className="text-sm text-gray-500 mt-1">
             {new Date(ebook.created_at).toLocaleDateString()}
           </p>
 
+
+          {/* USUŃ */}
+
           <button
             onClick={async (e) => {
+
               e.stopPropagation()
+
               if (!confirm('Na pewno usunąć ebook?')) return
 
               await fetch('/api/delete-ebook', {
@@ -56,13 +94,19 @@ export default function MyEbooks({ onOpen }: any) {
               setEbooks((prev) =>
                 prev.filter((e) => e.id !== ebook.id)
               )
+
             }}
             className="mt-3 text-sm text-red-600 hover:text-red-800"
           >
             Usuń
           </button>
+
         </div>
+
       ))}
+
     </div>
+
   )
+
 }
