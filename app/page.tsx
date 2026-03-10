@@ -464,15 +464,16 @@ export default function Home() {
       </section>
 
     
-<footer className="py-10 text-center text-gray-500 text-sm bg-black">
-  <div className="space-x-6">
-    <a href="/polityka-prywatnosci" className="hover:underline">
-      Polityka prywatności
-    </a>
-    <a href="/regulamin" className="hover:underline">
-      Regulamin
-    </a>
-  </div>
+<footer className="text-sm text-gray-500 flex gap-6 justify-center mt-10 mb-6">
+
+<a href="/privacy">Polityka prywatności</a>
+
+<a href="/terms">Regulamin</a>
+
+<a href="/cookies">Cookies</a>
+
+<a href="/ai">AI</a>
+
 </footer>
 </main>
   )
