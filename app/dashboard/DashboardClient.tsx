@@ -118,7 +118,7 @@ body: JSON.stringify({ topic })
 const data = await res.json()
 
 setProgress(80)
-setEbook(data.text)
+setEbook(data.text.replace(/\d+\./g, '\n\n$&'))
 
 /* SAVE */
 
@@ -213,33 +213,39 @@ return (
 
 {userData && (
 
-<div className="bg-white p-6 rounded shadow mb-8 flex justify-between">
+<div className="bg-white p-6 rounded shadow mb-8 flex justify-between items-center">
 
-<div>
+  <div>
 
-<p className="text-gray-500 text-sm">Zalogowany jako</p>
-<p className="font-semibold">{userData.email}</p>
+    <p className="text-gray-500 text-sm">Zalogowany jako</p>
+    <p className="font-semibold">{userData.email}</p>
 
-<div className="mt-2 text-sm">
+    <div className="mt-2 flex gap-3 items-center">
 
-Plan:
-<span className="ml-2 bg-black text-white px-2 py-1 rounded text-xs">
-{userData.plan}
-</span>
+      <span className="bg-black text-white px-2 py-1 rounded text-xs">
+        Plan: {userData.plan}
+      </span>
 
-</div>
+      <button
+        onClick={() => router.push('/pricing')}
+        className="text-sm text-blue-600 hover:underline"
+      >
+        Zmień plan
+      </button>
 
-</div>
+    </div>
 
-<button
-onClick={async () => {
-await supabase.auth.signOut()
-router.push('/login')
-}}
-className="text-red-500"
->
-Wyloguj
-</button>
+  </div>
+
+  <button
+    onClick={async () => {
+      await supabase.auth.signOut()
+      router.push('/login')
+    }}
+    className="text-red-500"
+  >
+    Wyloguj
+  </button>
 
 </div>
 
@@ -369,8 +375,7 @@ style={{ width: `${progress}%` }}
 
 </div>
 
-<EbookEditor content={ebook} onChange={setEbook} />
-
+<EbookEditor content={ebook.replace(/===SPIS_TRESCI===|===KONIEC_SPISU===/g, '')} onChange={setEbook} />
 </div>
 
 )}
