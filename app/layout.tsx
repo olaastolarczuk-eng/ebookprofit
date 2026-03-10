@@ -42,6 +42,19 @@ export default function RootLayout({
     <html lang="pl">
       <body>
         {children}
+        {/* FOOTER */}
+
+        <footer className="text-sm text-gray-500 flex gap-6 justify-center mt-10 mb-6">
+
+          <a href="/privacy">Polityka prywatności</a>
+
+          <a href="/terms">Regulamin</a>
+
+          <a href="/cookies">Cookies</a>
+
+          <a href="/ai">AI</a>
+
+        </footer>
         <CookieBanner />
       </body>
     </html>
