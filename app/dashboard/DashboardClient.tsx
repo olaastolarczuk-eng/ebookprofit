@@ -7,395 +7,541 @@ import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 
 export default function Dashboard() {
+  const router = useRouter()
+  const [topic, setTopic] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [ebook, setEbook] = useState('')
+  const [cover, setCover] = useState<string | null>(null)
+  const [progress, setProgress] = useState(0)
+  const [ebookId, setEbookId] = useState<string | null>(null)
+  const [userEmail, setUserEmail] = useState<string | null>(null)
+  const [userData, setUserData] = useState<any>(null)
+  const [authLoading, setAuthLoading] = useState(true)
 
-const router = useRouter()
+  
 
-const [topic, setTopic] = useState('')
-const [loading, setLoading] = useState(false)
-const [ebook, setEbook] = useState('')
-const [cover, setCover] = useState<string | null>(null)
-const [progress, setProgress] = useState(0)
-const [ebookId, setEbookId] = useState<string | null>(null)
-const [userData, setUserData] = useState<any>(null)
-const [authLoading, setAuthLoading] = useState(true)
-
-
-/* =========================
-   USER LOAD
-========================= */
 
 useEffect(() => {
+  const loadUser = async () => {
+    const { data } = await supabase.auth.getUser()
 
-const loadUser = async () => {
+    if (!data.user) {
+      setAuthLoading(false)
+      router.push('/login')
+      return
+    }
 
-const { data } = await supabase.auth.getUser()
+    const { data: profile, error } = await supabase
+  .from('profiles')
+  .select('*')
+  .eq('id', data.user.id)
+  .maybeSingle()
 
-if (!data.user) {
-router.push('/login')
-return
+  console.log('PROFILE FROM DB:', profile)
+
+if (error) {
+  console.log('Profile error:', error)
+  setAuthLoading(false)
+  return
 }
 
-const { data: profile } = await supabase
-.from('profiles')
-.select('*')
-.eq('id', data.user.id)
-.maybeSingle()
-
-setUserData(profile)
-setAuthLoading(false)
-
+if (!profile) {
+  console.log('Profil nie istnieje')
+  setAuthLoading(false)
+  return 
 }
 
-loadUser()
+    // 🔁 RESET MIESIĘCZNY
+    const now = new Date()
+    const resetDate = profile.month_reset
+      ? new Date(profile.month_reset)
+      : new Date()
 
+    if (
+      now.getMonth() !== resetDate.getMonth() ||
+      now.getFullYear() !== resetDate.getFullYear()
+    ) {
+      await supabase
+        .from('profiles')
+        .update({
+          ebooks_this_month: 0,
+          month_reset: new Date().toISOString(),
+        })
+        .eq('id', profile.id)
+
+      profile.ebooks_this_month = 0
+    }
+
+    // 🔒 Sprawdzenie wygaśnięcia planu
+    if (profile.plan_expires) {
+      const expires = new Date(profile.plan_expires)
+      const now = new Date()
+
+      if (now > expires) {
+        await supabase
+          .from('profiles')
+          .update({ plan: 'Brak' })
+          .eq('id', profile.id)
+
+        profile.plan = 'Brak'
+      }
+    }
+
+    setUserData(profile)
+    setAuthLoading(false)
+  }
+
+  loadUser()
 }, [router])
 
 
-/* =========================
-   AUTOSAVE
-========================= */
-
+  
+  // ===== AUTOZAPIS ZMIAN =====
 useEffect(() => {
+  if (!ebookId) return
 
-if (!ebookId) return
+  console.log('AUTOSAVE START', ebookId)
 
-const timeout = setTimeout(async () => {
+  const timeout = setTimeout(async () => {
+    try {
+      console.log('WYSYŁAM UPDATE')
 
-await fetch('/api/update', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({
-id: ebookId,
-content: ebook,
-topic
-})
-})
-
-}, 2000)
-
-return () => clearTimeout(timeout)
-
-}, [ebook, topic, ebookId])
-
-
-/* =========================
-   OPEN EBOOK
-========================= */
-
-const openEbook = (ebookData: any) => {
-
-setTopic(ebookData.topic)
-setEbook(ebookData.content)
-setEbookId(ebookData.id)
-
-}
-
-
-/* =========================
-   GENERATE EBOOK
-========================= */
-
-const generateEbook = async () => {
-
-if (!userData || userData.plan === 'Brak') {
-alert('Musisz wykupić plan')
-return
-}
-
-setLoading(true)
-setProgress(10)
-setEbook('')
-setCover(null)
-
-try {
-
-const res = await fetch('/api/generate', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ topic })
-})
-
-const data = await res.json()
-
-setProgress(80)
-setEbook(data.text.replace(/\d+\./g, '\n\n$&'))
-
-/* SAVE */
-
-const saveRes = await fetch('/api/save', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    title: topic,
-    topic,
-    content: data.text,
-    cover
-  }),
-})
-
-const saved = await saveRes.json()
-setEbookId(saved.id)
-
-/* COVER */
-
-if (userData.plan !== 'Podstawowy') {
-
-const coverRes = await fetch('/api/cover', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ title: topic })
-})
-
-const coverData = await coverRes.json()
-setCover(coverData.image)
-
-}
-
-setProgress(100)
-
-} catch (err) {
-
-alert('Błąd generowania')
-
-}
-
-setLoading(false)
-
-}
-
-
-/* =========================
-   DOWNLOAD PDF
-========================= */
-
-const downloadPDF = async () => {
-
-const res = await fetch('/api/pdf', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({
-text: ebook,
-title: topic,
-cover
-})
-})
-
-const blob = await res.blob()
-const url = URL.createObjectURL(blob)
-
-const link = document.createElement('a')
-link.href = url
-link.download = 'ebook.pdf'
-link.click()
-
-}
-
-
-/* =========================
-   LOADING
-========================= */
-
-if (authLoading) {
-return <div className="p-10">Ładowanie...</div>
-}
-
-
-/* =========================
-   UI
-========================= */
-
-return (
-
-<main className="min-h-screen bg-gray-100 p-8">
-
-
-{/* USER PANEL */}
-
-{userData && (
-
-<div className="bg-white p-6 rounded shadow mb-8 flex justify-between items-center">
-
-  <div>
-
-    <p className="text-gray-500 text-sm">Zalogowany jako</p>
-    <p className="font-semibold">{userData.email}</p>
-
-    <div className="mt-2 flex gap-3 items-center">
-
-      <span className="bg-black text-white px-2 py-1 rounded text-xs">
-        Plan: {userData.plan}
-      </span>
-
-      <button
-        onClick={() => router.push('/pricing')}
-        className="text-sm text-blue-600 hover:underline"
-      >
-        Zmień plan
-      </button>
-
-    </div>
-
-  </div>
-
-  <button
-    onClick={async () => {
-      await supabase.auth.signOut()
-      router.push('/login')
-    }}
-    className="text-red-500"
-  >
-    Wyloguj
-  </button>
-
-</div>
-
-)}
-
-
-{/* GENERATOR */}
-
-<div className="bg-white p-6 rounded shadow mb-8">
-
-<h1 className="text-2xl font-bold mb-4">
-Generator eBooka
-</h1>
-
-<input
-type="text"
-placeholder="Podaj temat ebooka..."
-value={topic}
-onChange={(e) => setTopic(e.target.value)}
-className="border p-3 rounded w-full max-w-xl mb-4"
-/>
-
-<button
-onClick={generateEbook}
-disabled={loading}
-className="bg-black text-white px-6 py-3 rounded"
->
-
-{loading ? 'Generowanie...' : 'Generuj ebook'}
-
-</button>
-
-
-{loading && (
-
-<div className="mt-4">
-
-<div className="bg-gray-200 h-3 rounded">
-
-<div
-className="bg-black h-3 rounded"
-style={{ width: `${progress}%` }}
-/>
-
-</div>
-
-<p className="text-sm mt-1">{progress}%</p>
-
-</div>
-
-)}
-
-</div>
-
-
-{/* RESULT */}
-
-{ebook && (
-
-<div className="bg-white p-6 rounded shadow mb-8">
-
-<div className="flex gap-3 mb-4">
-
-  {/* PDF */}
-  <button
-    onClick={downloadPDF}
-    className="bg-green-600 text-white px-5 py-2 rounded"
-  >
-    Pobierz PDF
-  </button>
-
-  {/* DOCX */}
-  <button
-    onClick={async () => {
-
-      const res = await fetch('/api/docx', {
+      await fetch('/api/update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          text: ebook,
-          title: topic || 'ebook',
+          id: ebookId,
+          content: ebook,
+          topic,
         }),
       })
 
-      const blob = await res.blob()
-      const url = URL.createObjectURL(blob)
+      console.log('ZAPISANO')
+    } catch (err) {
+      console.log('Autosave error')
+    }
+  }, 2000)
 
-      const link = document.createElement('a')
-      link.href = url
-      link.download = 'ebook.docx'
-      document.body.appendChild(link)
-      link.click()
-      link.remove()
+  return () => clearTimeout(timeout)
+}, [ebook, topic, ebookId])
 
-    }}
-    className="bg-blue-600 text-white px-5 py-2 rounded"
-  >
-    Pobierz DOCX
-  </button>
+  const openEbook = (ebookData: any) => {
+  setTopic(ebookData.topic)
+  setEbook(ebookData.content)
+  setEbookId(ebookData.id) // ← konieczne do autosave
+}
+  const generateEbook = async () => {
+  // 🔐 LIMIT PLANU
+  if (!userData || userData.plan === 'Brak') {
+  alert('Musisz wykupić plan, aby generować ebooki.')
+  return
+}
+  if (userData) {
+    const limit =
+  userData.plan === 'Podstawowy'
+    ? 5
+    : userData.plan === 'Premium'
+    ? 15
+    : userData.plan === 'Pro+'
+    ? 30
+    : 0
 
-  {/* OKŁADKA */}
-  {cover && (
+        
+
+    if (userData.ebooks_this_month >= limit) {
+      alert('Osiągnięto limit ebooków dla Twojego planu 🚫')
+      return
+    }
+  }
+
+  setLoading(true)
+  setEbook('')
+  setProgress(5)
+  setEbookId(null)
+
+  const steps = [15, 30, 45, 60, 75, 90, 95]
+  let i = 0
+
+  const interval = setInterval(() => {
+    if (i < steps.length) {
+      setProgress(steps[i])
+      i++
+    }
+  }, 1500)
+
+  try {
+    const res = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ topic, }),
+    })
+
+    const data = await res.json()
+
+    clearInterval(interval)
+    setProgress(100)
+    setEbook(data.text)
+
+    // ===== ZAPIS DO BAZY =====
+    try {
+      const saveRes = await fetch('/api/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: topic,
+          topic,
+          content: data.text,
+        }),
+      })
+
+      const saved = await saveRes.json()
+      setEbookId(saved.id)
+
+      // 📈 zwiększ licznik (jeśli nie Pro+)
+      if (userData?.plan !== 'Pro+') {
+        await supabase
+          .from('profiles')
+          .update({
+            ebooks_this_month: userData.ebooks_this_month + 1,
+          })
+          .eq('id', userData.id)
+
+        setUserData({
+          ...userData,
+          ebooks_this_month: userData.ebooks_this_month + 1,
+        })
+      }
+
+    } catch (err) {
+      console.log('Save error')
+    }
+
+    // ===== OKŁADKA =====
+    if (userData?.plan !== 'Podstawowy') {
+      try {
+        const coverRes = await fetch('/api/cover', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: topic,
+          }),
+        })
+
+        const coverData = await coverRes.json()
+        setCover(coverData.image)
+
+      } catch (err) {
+        console.log('Cover error')
+      }
+    }
+
+  } catch (err) {
+    clearInterval(interval)
+    alert('Błąd generowania ebooka')
+  } finally {
+    setLoading(false)
+  }
+}
+
+  function textToHtml(text: string) {
+
+  const lines = text.split('\n')
+
+  let html = ''
+  let inToc = false
+  let tocItems: string[] = []
+
+  lines.forEach((line) => {
+
+    let clean = line.trim()
+    if (!clean) return
+
+    // usuń znaczniki techniczne
+    if (clean.includes('===SPIS_TRESCI===')) return
+    if (clean.includes('===KONIEC_SPISU===')) return
+
+    // usuwanie markdown
+    clean = clean
+      .replace(/\*\*/g, '')
+      .replace(/####\s*/g, '')
+      .replace(/###\s*/g, '')
+      .replace(/##\s*/g, '')
+      .replace(/#\s*/g, '')
+      .trim()
+
+    // wykrycie spisu treści
+    if (clean.toLowerCase().includes('spis treści')) {
+      inToc = true
+      html += `<h2>Spis treści</h2>`
+      return
+    }
+
+    // elementy spisu treści
+    if (inToc && /^\d+\./.test(clean)) {
+      tocItems.push(`<li>${clean}</li>`)
+      return
+    }
+
+    // koniec spisu
+    if (clean.includes('===KONIEC_SPISU===')) {
+
+  if (tocItems.length > 0) {
+    html += `<ul class="list-decimal ml-6 mb-6">${tocItems.join('')}</ul>`
+    tocItems = []
+  }
+
+  inToc = false
+  return
+}
+
+    // nagłówki rozdziałów
+    if (/^\d+\./.test(clean)) {
+
+      html += `<h2 class="text-2xl font-bold mt-8 mb-4">${clean}</h2>`
+      return
+    }
+
+    // listy punktowane
+    if (clean.startsWith('- ')) {
+  html += `<li class="ml-6 list-disc font-semibold">${clean.replace('- ', '')}</li>`
+}
+
+    html += `<p class="mb-4 leading-relaxed">${clean}</p>`
+
+  })
+
+  if (tocItems.length > 0) {
+    html += `<ul class="list-decimal ml-6 mb-6">${tocItems.join('')}</ul>`
+  }
+
+  return html
+}
+
+
+  if (authLoading) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      Ładowanie...
+    </div>
+  )
+}
+
+
+  return (
+  <main className="min-h-screen p-8 bg-gray-100">
+
+    {/* ===== PANEL UŻYTKOWNIKA ===== */}
+{userData && (
+  <div className="bg-white p-4 rounded shadow mb-6 flex justify-between items-center">
+    <div>
+      <p className="text-sm text-gray-500">
+        Zalogowany jako
+      </p>
+
+      <p className="font-semibold">
+        {userData.email}
+      </p>
+
+      <div className="mt-2 text-sm">
+        <span>Plan:</span>
+        <span className="ml-2 px-2 py-1 rounded bg-black text-white text-xs">
+          {userData.plan}
+        </span>
+      </div>
+
+      <div className="mt-2 text-sm text-gray-600">
+  Wykorzystano:
+  <span className="ml-1 font-semibold">
+    {userData.ebooks_this_month}
+  </span>
+
+  <span>
+    {' / '}
+    {userData.plan === 'Podstawowy'
+      ? 5
+      : userData.plan === 'Premium'
+      ? 15
+      : userData.plan === 'Pro+'
+      ? 30
+      : 0}
+  </span>
+</div>
+
+      <button
+  onClick={() => router.push('/pricing')}
+  className="mt-3 text-sm bg-black text-white px-3 py-1 rounded"
+>
+  Zmień plan
+</button>
+    </div>
+
     <button
-      onClick={() => {
-
-        const link = document.createElement('a')
-        link.href = `data:image/png;base64,${cover}`
-        link.download = 'okladka.png'
-        document.body.appendChild(link)
-        link.click()
-        link.remove()
-
+      onClick={async () => {
+        await supabase.auth.signOut()
+        router.push('/login')
       }}
-      className="bg-purple-600 text-white px-5 py-2 rounded"
+      className="text-red-600 text-sm"
     >
-      Pobierz okładkę PNG
+      Wyloguj się
     </button>
-  )}
-
-  {/* GENERUJ KOLEJNY */}
-  <button
-    onClick={generateEbook}
-    className="bg-black text-white px-5 py-2 rounded"
-  >
-    Generuj kolejny
-  </button>
-
-</div>
-
-<EbookEditor content={ebook.replace(/===SPIS_TRESCI===|===KONIEC_SPISU===/g, '')} onChange={setEbook} />
-</div>
-
+  </div>
 )}
 
 
-{/* MY EBOOKS */}
+    {/* DALEJ MASZ SWÓJ H1 */}
+    {userData?.plan === 'Brak' ? (
+  <div className="bg-white p-10 rounded shadow text-center">
+    <h2 className="text-xl font-bold mb-4">
+      Wybierz plan aby rozpocząć 🚀
+    </h2>
 
-<div className="bg-white p-6 rounded shadow">
+    <button
+      onClick={() => router.push('/pricing')}
+      className="bg-black text-white px-6 py-2 rounded"
+    >
+      Wybierz plan
+    </button>
+  </div>
+) : (
+  <>
+    <h1 className="text-3xl font-bold mb-6">
+      Generator eBooka
+    </h1>
 
-<h2 className="text-xl font-bold mb-4">
-Twoje ebooki
-</h2>
 
-<MyEbooks onOpen={openEbook} />
+      <input
+        type="text"
+        placeholder="Podaj temat ebooka..."
+        value={topic}
+        onChange={(e) => setTopic(e.target.value)}
+        className="p-2 border rounded w-full max-w-xl mb-4"
+      />
 
-</div>
 
+      <button
+        onClick={generateEbook}
+        disabled={loading}
+        className="bg-black text-white px-6 py-2 rounded"
+      >
+        {loading ? 'Generowanie eBooka...' : 'Generuj eBook'}
+      </button>
 
+      {loading && (
+        <div className="mt-6 p-6 bg-white rounded shadow max-w-xl text-center">
+          <p className="text-xl font-semibold mb-4">
+            Twój eBook właśnie się generuje, to może potrwać kilka minut…
+          </p>
+
+          <div className="w-full bg-gray-200 rounded-full h-4 mb-2">
+            <div
+              className="bg-black h-4 rounded-full transition-all duration-500"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+
+          <p className="text-sm text-gray-600">{progress}%</p>
+        </div>
+      )}
+
+      {ebook && (
+        <div className="mt-8 max-w-3xl">
+          {cover && userData?.plan !== 'Podstawowy' && (
+
+            <div className="mb-6">
+              <img
+                src={`data:image/png;base64,${cover}`}
+                alt="Okładka ebooka"
+                className="w-64 shadow mb-4"
+              />
+              
+
+              <button
+                onClick={() => {
+                  const link = document.createElement('a')
+                  link.href = `data:image/png;base64,${cover}`
+                  link.download = 'okladka.png'
+                  link.click()
+                }}
+                className="bg-blue-600 text-white px-4 py-2 rounded"
+              >
+                Pobierz okładkę PNG
+              </button>
+            </div>
+          )}
+
+          {/* PRZYCISKI */}
+          <div className="flex gap-3 mb-4"> 
+            {userData?.plan !== 'Podstawowy' && (
+  <button
+    onClick={async () => {
+      const res = await fetch('/api/pdf', {
+
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    text: ebook,
+                    title: topic || 'ebook',
+                    cover,
+                  }),
+                })
+
+                const blob = await res.blob()
+                const url = URL.createObjectURL(blob)
+
+                const link = document.createElement('a')
+                link.href = url
+                link.download = 'ebook.pdf'
+                document.body.appendChild(link)
+                link.click()
+                link.remove()
+              }}
+              className="bg-green-600 text-white px-6 py-2 rounded"
+            >
+              Pobierz PDF
+            </button>
+            )}
+
+            <button
+              onClick={async () => {
+                const res = await fetch('/api/docx', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    text: ebook,
+                    title: topic || 'ebook',
+                  }),
+                })
+
+                const blob = await res.blob()
+                const url = URL.createObjectURL(blob)
+
+                const link = document.createElement('a')
+                link.href = url
+                link.download = 'ebook.docx'
+                document.body.appendChild(link)
+                link.click()
+                link.remove()
+              }}
+              className="bg-blue-600 text-white px-6 py-2 rounded"
+            >
+              Pobierz wersję do edycji (DOCX)
+            </button>
+          </div>
+          <EbookEditor
+  content={textToHtml(ebook)}
+  onChange={setEbook}
+/>
+          /
+        </div>
+      )}
+            <div className="mt-12">
+        <MyEbooks onOpen={openEbook} />
+      </div>
+    </>
+)}
 </main>
-
 )
-
 }
+
+
+
